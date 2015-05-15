@@ -13,6 +13,7 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
 
     Button bRegister;
     EditText etName, etAge, etUsername, etPassword;
+    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +29,21 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
 
         bRegister.setOnClickListener(this);
 
+        userLocalStore = new UserLocalStore(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.bRegister:
+                String name = etName.getText().toString();
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
+                int age = Integer.parseInt(etAge.getText().toString());
 
+                User registeredUser = new User(name, username, age, password);
 
+                userLocalStore.storeUserData(registeredUser);
 
                 break;
         }
