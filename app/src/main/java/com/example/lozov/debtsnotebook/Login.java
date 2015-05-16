@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -39,10 +40,12 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.bLogin:
-                User user = new User(null, null);
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
 
-                userLocalStore.storeUserData(user);
-                userLocalStore.setUserLoggedIn(true);
+                User user = new User(username, password);
+
+                authenticate(user);
 
                 break;
 
@@ -50,5 +53,33 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
                 startActivity(new Intent(this, Register.class));
                 break;
         }
+    }
+
+    private void authenticate(User user) {
+        ServerRequest serverRequest = new ServerRequest(this);
+        serverRequest.fetchUserDataInBackground(user, new GetUserCallback() {
+            @Override
+            public void done(User returnedUser) {
+                if (returnedUser == null){
+                    showErrorMessage();
+                } else {
+                    logUserIn(returnedUser);
+                }
+            }
+        });
+    }
+
+    private void logUserIn(User user) {
+        userLocalStore.storeUserData(user);
+        userLocalStore.setUserLoggedIn(true);
+
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    private void showErrorMessage() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
+        alertDialogBuilder.setMessage("Incorrect username or password");
+        alertDialogBuilder.setPositiveButton("Ok", null);
+        alertDialogBuilder.show();
     }
 }

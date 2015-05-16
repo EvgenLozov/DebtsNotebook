@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -41,11 +42,21 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
                 String password = etPassword.getText().toString();
                 int age = Integer.parseInt(etAge.getText().toString());
 
-                User registeredUser = new User(name, username, age, password);
+                User newUser = new User(name, username, age, password);
 
-                userLocalStore.storeUserData(registeredUser);
+                register(newUser);
 
                 break;
         }
+    }
+
+    private void register(User newUser) {
+        ServerRequest registerRequest = new ServerRequest(this);
+        registerRequest.storeUserDataInBackground(newUser, new GetUserCallback() {
+            @Override
+            public void done(User user) {
+                startActivity(new Intent(Register.this, Login.class));
+            }
+        });
     }
 }
