@@ -13,7 +13,7 @@ import android.widget.EditText;
 public class Register extends ActionBarActivity implements View.OnClickListener{
 
     Button bRegister;
-    EditText etName, etAge, etUsername, etPassword;
+    EditText etEmail, etUsername, etPassword;
     UserLocalStore userLocalStore;
 
     @Override
@@ -21,8 +21,7 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        etName = (EditText) findViewById(R.id.etName);
-        etAge = (EditText) findViewById(R.id.etAge);
+        etEmail = (EditText) findViewById(R.id.etEmail);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
 
@@ -37,12 +36,11 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.bRegister:
-                String name = etName.getText().toString();
+                String email = etEmail.getText().toString();
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                int age = Integer.parseInt(etAge.getText().toString());
 
-                User newUser = new User(name, username, age, password);
+                User newUser = new User(email, username, password);
 
                 register(newUser);
 

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +12,7 @@ import android.widget.EditText;
 public class MainActivity extends ActionBarActivity implements View.OnClickListener{
 
     Button bLogout;
-    EditText etName, etAge, etUsername;
+    EditText etEmail, etUsername;
     UserLocalStore userLocalStore;
 
     @Override
@@ -21,8 +20,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        etName = (EditText) findViewById(R.id.etName);
-        etAge = (EditText) findViewById(R.id.etAge);
+        etEmail = (EditText) findViewById(R.id.etEmail);
         etUsername = (EditText) findViewById(R.id.etUsername);
 
         bLogout = (Button) findViewById(R.id.bLogout);
@@ -33,18 +31,26 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (authenticate()){
             displayUserDetails();
+        } else {
+            startActivity(new Intent(this, Login.class));
         }
     }
 
     private void displayUserDetails() {
         User user = userLocalStore.getLoggedInUser();
         etUsername.setText(user.getUsername());
-        etName.setText(user.getName());
-        etAge.setText(user.getAge() + "");
+        etEmail.setText(user.getEmail());
     }
 
     private boolean authenticate() {

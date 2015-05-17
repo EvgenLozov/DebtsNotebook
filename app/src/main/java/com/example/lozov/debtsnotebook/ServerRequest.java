@@ -4,19 +4,21 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParamBean;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -28,7 +30,7 @@ import java.util.List;
  */
 public class ServerRequest {
     public static final int CONNECTION_TIMEOUT = 1000 * 15;
-    public static final String SERVER_ADDRESS = "localhost";
+    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
 
     ProgressDialog progressDialog;
 
@@ -68,14 +70,19 @@ public class ServerRequest {
 
             HttpPost httpPost = new HttpPost(SERVER_ADDRESS + "/user");
 
-            List<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("name", user.getName()));
-            dataToSend.add(new BasicNameValuePair("username", user.getUsername()));
-            dataToSend.add(new BasicNameValuePair("password", user.getPassword()));
-            dataToSend.add(new BasicNameValuePair("age", user.getAge() + ""));
+            JSONObject dataToSend = new JSONObject();
+            try {
+                dataToSend.put("email", user.getEmail());
+                dataToSend.put("username", user.getUsername());
+                dataToSend.put("password", user.getPassword());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            httpPost.addHeader("Content-Type", "application/json");
 
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(dataToSend));
+                httpPost.setEntity(new StringEntity(dataToSend.toString()));
                 httpClient.execute(httpPost);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -109,7 +116,7 @@ public class ServerRequest {
 
             HttpClient httpClient = new DefaultHttpClient(httpParams);
 
-            HttpPost httpPost = new HttpPost(SERVER_ADDRESS + "/user/login");
+            HttpPost httpPost = new HttpPost(SERVER_ADDRESS + "/login");
 
             List<NameValuePair> dataToSend = new ArrayList<>();
             dataToSend.add(new BasicNameValuePair("username", user.getUsername()));
@@ -126,10 +133,9 @@ public class ServerRequest {
                 JSONObject jsonObject = new JSONObject(result);
 
                 if (jsonObject.length() > 0){
-                    String name = jsonObject.getString("name");
-                    int age = jsonObject.getInt("age");
+                    String email = jsonObject.getString("email");
 
-                    returnedUser = new User(name, user.getUsername(), age, user.getPassword());
+                    returnedUser = new User(email, user.getUsername(), user.getPassword());
                 }
 
             } catch (Exception e) {
