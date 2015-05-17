@@ -5,28 +5,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener{
+public class Borrowers extends ActionBarActivity {
 
-    Button bBorrowers, bDebtors;
+    String[] borrowers = { "Иван", "Марья", "Петр", "Антон" };
 
+    ListView lvMyBorrowers;
     UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_borrowers);
 
-        bBorrowers = (Button) findViewById(R.id.bBorrowers);
-        bDebtors = (Button) findViewById(R.id.bDebtors);
-
-        bBorrowers.setOnClickListener(this);
-        bDebtors.setOnClickListener(this);
+        lvMyBorrowers = (ListView) findViewById(R.id.lvMyBorrowers);
 
         userLocalStore = new UserLocalStore(this);
     }
@@ -34,7 +29,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_borrowers, menu);
         return true;
     }
 
@@ -54,31 +49,15 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.bBorrowers:
-                startActivity(new Intent(this, Borrowers.class));
-                break;
-            case R.id.bDebtors:
-                startActivity(new Intent(this, Debtors.class));
-                break;
-        }
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
-        if (!authenticate()){
-            startActivity(new Intent(this, Login.class));
-        }
+            displayMyBorrowers();
     }
 
-    private boolean authenticate() {
-        return userLocalStore.isUserLoggedIn();
-    }
+    private void displayMyBorrowers() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, borrowers);
 
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
+        lvMyBorrowers.setAdapter(adapter);
     }
 }

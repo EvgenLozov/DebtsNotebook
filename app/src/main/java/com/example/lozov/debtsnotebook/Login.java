@@ -82,4 +82,9 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
         alertDialogBuilder.setPositiveButton("Ok", null);
         alertDialogBuilder.show();
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }
