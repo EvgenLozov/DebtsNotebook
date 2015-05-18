@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,8 +24,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Yevhen on 2015-05-16.
@@ -46,26 +46,26 @@ public class ServerRequest {
         progressDialog.setMessage("Please wait..");
     }
 
-    public void storeUserDataInBackground(User user, GetUserCallback userCallback){
+    public void storeUserDataInBackground(User user, GetUsersCallback userCallback){
         progressDialog.show();
         new StoreUserDataAsyncTask(user, userCallback).execute();
     }
 
-    public void fetchUserDataInBackground(User user, GetUserCallback userCallback){
+    public void fetchUserDataInBackground(User user, GetUsersCallback userCallback){
         progressDialog.show();
         new FetchUserDataAsyncTask(user, userCallback).execute();
     }
 
-    public void fetchBorrowers(User user, GetBorrowersCallback callback){
+    public void fetchBorrowers(User user, GetUsersCallback callback){
         progressDialog.show();
         new FetchBorrowersAsyncTask(callback).execute(user.getId());
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void>{
         User user;
-        GetUserCallback userCallback;
+        GetUsersCallback userCallback;
 
-        public StoreUserDataAsyncTask(User user, GetUserCallback userCallback) {
+        public StoreUserDataAsyncTask(User user, GetUsersCallback userCallback) {
             this.user = user;
             this.userCallback = userCallback;
         }
@@ -111,9 +111,9 @@ public class ServerRequest {
 
     public class FetchUserDataAsyncTask extends AsyncTask<Void, Void, User>{
         User user;
-        GetUserCallback userCallback;
+        GetUsersCallback userCallback;
 
-        public FetchUserDataAsyncTask(User user, GetUserCallback userCallback) {
+        public FetchUserDataAsyncTask(User user, GetUsersCallback userCallback) {
             this.user = user;
             this.userCallback = userCallback;
         }
@@ -154,16 +154,16 @@ public class ServerRequest {
         @Override
         protected void onPostExecute(User returnedUser) {
             progressDialog.dismiss();
-            userCallback.done(returnedUser);
+            userCallback.done(Collections.singletonList(returnedUser));
             super.onPostExecute(returnedUser);
         }
     }
 
     public class FetchBorrowersAsyncTask extends AsyncTask<String, Void, List<User>>{
 
-        GetBorrowersCallback callback;
+        GetUsersCallback callback;
 
-        public FetchBorrowersAsyncTask(GetBorrowersCallback callback) {
+        public FetchBorrowersAsyncTask(GetUsersCallback callback) {
             this.callback = callback;
         }
 

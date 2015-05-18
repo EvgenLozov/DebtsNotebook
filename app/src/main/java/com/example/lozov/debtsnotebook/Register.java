@@ -3,11 +3,11 @@ package com.example.lozov.debtsnotebook;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.util.List;
 
 
 public class Register extends ActionBarActivity implements View.OnClickListener{
@@ -50,9 +50,9 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
 
     private void register(User newUser) {
         ServerRequest registerRequest = new ServerRequest(this);
-        registerRequest.storeUserDataInBackground(newUser, new GetUserCallback() {
+        registerRequest.storeUserDataInBackground(newUser, new GetUsersCallback() {
             @Override
-            public void done(User user) {
+            public void done(List<User> users) {
                 startActivity(new Intent(Register.this, Login.class));
             }
         });

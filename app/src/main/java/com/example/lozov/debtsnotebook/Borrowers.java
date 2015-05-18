@@ -30,7 +30,7 @@ public class Borrowers extends ActionBarActivity {
         adapter = new BorrowersAdapter(this, new ArrayList<User>());
         lvMyBorrowers.setAdapter(adapter);
 
-        new ServerRequest(this).fetchBorrowers(userLocalStore.getLoggedInUser(), new GetBorrowersCallback() {
+        new ServerRequest(this).fetchBorrowers(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
             @Override
             public void done(List<User> borrowers) {
                 adapter.addAll(borrowers);

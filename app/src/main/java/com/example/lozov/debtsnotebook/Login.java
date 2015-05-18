@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.List;
+
 
 public class Login extends ActionBarActivity implements View.OnClickListener{
 
@@ -57,13 +59,13 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
 
     private void authenticate(User user) {
         ServerRequest serverRequest = new ServerRequest(this);
-        serverRequest.fetchUserDataInBackground(user, new GetUserCallback() {
+        serverRequest.fetchUserDataInBackground(user, new GetUsersCallback() {
             @Override
-            public void done(User returnedUser) {
-                if (returnedUser == null){
+            public void done(List<User> returnedUsers) {
+                if (returnedUsers == null || returnedUsers.isEmpty()){
                     showErrorMessage();
                 } else {
-                    logUserIn(returnedUser);
+                    logUserIn(returnedUsers.get(0));
                 }
             }
         });
