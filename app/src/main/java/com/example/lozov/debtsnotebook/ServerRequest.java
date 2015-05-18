@@ -10,6 +10,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -18,19 +19,23 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Yevhen on 2015-05-16.
  */
 public class ServerRequest {
     public static final int CONNECTION_TIMEOUT = 1000 * 15;
-    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
+//    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
+    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
+    private static final String LOGIN_URL = "/login";
 
     ProgressDialog progressDialog;
 
@@ -49,6 +54,11 @@ public class ServerRequest {
     public void fetchUserDataInBackground(User user, GetUserCallback userCallback){
         progressDialog.show();
         new FetchUserDataAsyncTask(user, userCallback).execute();
+    }
+
+    public void fetchBorrowers(User user, GetBorrowersCallback callback){
+        progressDialog.show();
+        new FetchBorrowersAsyncTask(callback).execute(user.getId());
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void>{
@@ -116,7 +126,7 @@ public class ServerRequest {
 
             HttpClient httpClient = new DefaultHttpClient(httpParams);
 
-            HttpPost httpPost = new HttpPost(SERVER_ADDRESS + "/login");
+            HttpPost httpPost = new HttpPost(SERVER_ADDRESS + LOGIN_URL);
 
             List<NameValuePair> dataToSend = new ArrayList<>();
             dataToSend.add(new BasicNameValuePair("username", user.getUsername()));
@@ -132,11 +142,7 @@ public class ServerRequest {
                 String result = EntityUtils.toString(entity);
                 JSONObject jsonObject = new JSONObject(result);
 
-                if (jsonObject.length() > 0){
-                    String email = jsonObject.getString("email");
-
-                    returnedUser = new User(email, user.getUsername(), user.getPassword());
-                }
+                returnedUser = new User(jsonObject);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -150,6 +156,49 @@ public class ServerRequest {
             progressDialog.dismiss();
             userCallback.done(returnedUser);
             super.onPostExecute(returnedUser);
+        }
+    }
+
+    public class FetchBorrowersAsyncTask extends AsyncTask<String, Void, List<User>>{
+
+        GetBorrowersCallback callback;
+
+        public FetchBorrowersAsyncTask(GetBorrowersCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        protected List<User> doInBackground(String... params) {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpParams, CONNECTION_TIMEOUT);
+
+            HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + params[0] + "/borrowers");
+
+            List<User> returnedUsers = new ArrayList<>();
+            try{
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity entity = response.getEntity();
+                String responseString = EntityUtils.toString(entity);
+
+                JSONArray jsonArray = new JSONArray(responseString);
+
+                returnedUsers = User.fromJson(jsonArray);
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return returnedUsers;
+        }
+
+        @Override
+        protected void onPostExecute(List<User> returnedUsers) {
+            progressDialog.dismiss();
+            callback.done(returnedUsers);
+            super.onPostExecute(returnedUsers);
         }
     }
 }

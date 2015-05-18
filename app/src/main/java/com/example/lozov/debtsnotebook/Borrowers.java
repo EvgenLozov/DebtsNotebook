@@ -8,10 +8,13 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Borrowers extends ActionBarActivity {
 
-    String[] borrowers = { "Иван", "Марья", "Петр", "Антон" };
+    BorrowersAdapter adapter;
 
     ListView lvMyBorrowers;
     UserLocalStore userLocalStore;
@@ -20,10 +23,20 @@ public class Borrowers extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_borrowers);
+        userLocalStore = new UserLocalStore(this);
 
         lvMyBorrowers = (ListView) findViewById(R.id.lvMyBorrowers);
 
-        userLocalStore = new UserLocalStore(this);
+        adapter = new BorrowersAdapter(this, new ArrayList<User>());
+        lvMyBorrowers.setAdapter(adapter);
+
+        new ServerRequest(this).fetchBorrowers(userLocalStore.getLoggedInUser(), new GetBorrowersCallback() {
+            @Override
+            public void done(List<User> borrowers) {
+                adapter.addAll(borrowers);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -46,18 +59,5 @@ public class Borrowers extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-            displayMyBorrowers();
-    }
-
-    private void displayMyBorrowers() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, borrowers);
-
-        lvMyBorrowers.setAdapter(adapter);
     }
 }
