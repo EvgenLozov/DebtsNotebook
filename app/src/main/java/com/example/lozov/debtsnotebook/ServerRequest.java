@@ -33,8 +33,8 @@ import java.util.List;
  */
 public class ServerRequest {
     public static final int CONNECTION_TIMEOUT = 1000 * 15;
-//    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
-    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
+    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
+//    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
     private static final String LOGIN_URL = "/login";
 
     ProgressDialog progressDialog;

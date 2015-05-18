@@ -46,6 +46,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.lozov.debtsnotebook.MainActivity" />
         </activity>
+        <activity
+            android:name=".Debts"
+            android:label="@string/title_activity_debts"
+            android:parentActivityName=".Borrowers" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.lozov.debtsnotebook.Borrowers" />
+        </activity>
     </application>
 
 </manifest>

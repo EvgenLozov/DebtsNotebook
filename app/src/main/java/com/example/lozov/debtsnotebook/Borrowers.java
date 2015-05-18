@@ -5,8 +5,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.List;
 
 public class Borrowers extends ActionBarActivity {
 
+    public static final String BORROWER_ID = "com.example.lozov.debtsnotebook.BORROWER_ID";
+    List<User> borrowersList = new ArrayList<>();
     BorrowersAdapter adapter;
 
     ListView lvMyBorrowers;
@@ -33,8 +38,18 @@ public class Borrowers extends ActionBarActivity {
         new ServerRequest(this).fetchBorrowers(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
             @Override
             public void done(List<User> borrowers) {
+                borrowersList.addAll(borrowers);
                 adapter.addAll(borrowers);
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        lvMyBorrowers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = new Intent(Borrowers.this, Debts.class);
+                intent.putExtra(BORROWER_ID, borrowersList.get(position).getId());
+                startActivity(intent);
             }
         });
     }

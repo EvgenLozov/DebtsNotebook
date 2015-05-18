@@ -12,5 +12,6 @@
     <string name="action_logout">Logout</string>
     <string name="title_activity_borrowers">Borrowers</string>
     <string name="title_activity_debtors">Debtors</string>
+    <string name="title_activity_debts">Debts</string>
 
 </resources>

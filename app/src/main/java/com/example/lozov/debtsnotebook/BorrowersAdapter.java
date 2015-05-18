@@ -30,6 +30,7 @@ public class BorrowersAdapter extends ArrayAdapter<User> {
         TextView tvName = (TextView) convertView.findViewById(R.id.tvUsername);
         // Populate the data into the template view using the data object
         tvName.setText(user.getUsername());
+        tvName.setTag(user.getId());
         // Return the completed view to render on screen
         return convertView;
     }
