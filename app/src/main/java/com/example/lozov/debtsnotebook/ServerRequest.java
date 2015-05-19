@@ -33,8 +33,8 @@ import java.util.List;
  */
 public class ServerRequest {
     public static final int CONNECTION_TIMEOUT = 1000 * 15;
-    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
-//    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
+//    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
+    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
     private static final String LOGIN_URL = "/login";
 
     ProgressDialog progressDialog;
@@ -59,6 +59,16 @@ public class ServerRequest {
     public void fetchBorrowers(User user, GetUsersCallback callback){
         progressDialog.show();
         new FetchBorrowersAsyncTask(callback).execute(user.getId());
+    }
+
+    public void fetchUsers(GetUsersCallback callback){
+        progressDialog.show();
+        new FetchUsersAsyncTask(callback).execute();
+    }
+
+    public void createDebt(Debt debt){
+        progressDialog.show();
+        new CreateDebtAsyncTask(debt).execute();
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void>{
@@ -199,6 +209,96 @@ public class ServerRequest {
             progressDialog.dismiss();
             callback.done(returnedUsers);
             super.onPostExecute(returnedUsers);
+        }
+    }
+
+    public class FetchUsersAsyncTask extends AsyncTask<Void, Void, List<User>>{
+
+        GetUsersCallback callback;
+
+        public FetchUsersAsyncTask(GetUsersCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        protected List<User> doInBackground(Void... params) {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpParams, CONNECTION_TIMEOUT);
+
+            HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user");
+
+            List<User> returnedUsers = new ArrayList<>();
+            try{
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity entity = response.getEntity();
+                String responseString = EntityUtils.toString(entity);
+
+                JSONArray jsonArray = new JSONArray(responseString);
+
+                returnedUsers = User.fromJson(jsonArray);
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return returnedUsers;
+        }
+
+        @Override
+        protected void onPostExecute(List<User> returnedUsers) {
+            progressDialog.dismiss();
+            callback.done(returnedUsers);
+            super.onPostExecute(returnedUsers);
+        }
+    }
+
+    public class CreateDebtAsyncTask extends AsyncTask<Void, Void, Void>{
+
+        Debt debt;
+
+        public CreateDebtAsyncTask(Debt debt) {
+            this.debt = debt;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpParams, CONNECTION_TIMEOUT);
+
+            HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+            HttpPost httpPost = new HttpPost(SERVER_ADDRESS + "/user/" + debt.getDebtorId() + "/debt");
+
+            JSONObject dataToSend = new JSONObject();
+            try {
+                dataToSend.put("debtorId", debt.getDebtorId());
+                dataToSend.put("borrowerId", debt.getBorrowerId());
+                dataToSend.put("amountOfMoney", debt.getAmountOfMoney());
+                dataToSend.put("desc", debt.getDesc());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            httpPost.addHeader("Content-Type", "application/json");
+
+            try {
+                httpPost.setEntity(new StringEntity(dataToSend.toString()));
+                httpClient.execute(httpPost);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
+            super.onPostExecute(aVoid);
         }
     }
 }

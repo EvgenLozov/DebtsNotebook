@@ -6,14 +6,8 @@
     android:layout_width="match_parent">
 
     <Button
-        android:id="@+id/bBorrowers"
-        android:text="My Borrowers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/bDebtors"
-        android:text="My Debtors"
+        android:id="@+id/bBorrow"
+        android:text="Borrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

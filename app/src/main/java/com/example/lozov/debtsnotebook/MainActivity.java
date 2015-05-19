@@ -9,11 +9,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener{
+public class MainActivity extends ActionBarActivity implements View.OnClickListener, BorrowDialog.DebtCreationListener{
 
-    Button bBorrowers, bDebtors;
+    Button bBorrow;
 
     UserLocalStore userLocalStore;
 
@@ -22,11 +23,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bBorrowers = (Button) findViewById(R.id.bBorrowers);
-        bDebtors = (Button) findViewById(R.id.bDebtors);
+        bBorrow = (Button) findViewById(R.id.bBorrow);
 
-        bBorrowers.setOnClickListener(this);
-        bDebtors.setOnClickListener(this);
+        bBorrow.setOnClickListener(this);
 
         userLocalStore = new UserLocalStore(this);
     }
@@ -40,28 +39,34 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()){
+
             case R.id.action_logout:
                 userLocalStore.clearUserData();
                 userLocalStore.setUserLoggedIn(false);
-
                 startActivity(new Intent(this, Login.class));
                 return true;
+
+            case R.id.action_borrowers:
+                startActivity(new Intent(this, Borrowers.class));
+                break;
+
+            case R.id.action_debtors:
+                startActivity(new Intent(this, Debtors.class));
+                break;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return false;
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.bBorrowers:
-                startActivity(new Intent(this, Borrowers.class));
-                break;
-            case R.id.bDebtors:
-                startActivity(new Intent(this, Debtors.class));
-                break;
+            case R.id.bBorrow:
+                new BorrowDialog().show(getSupportFragmentManager(), "borrow");
         }
     }
 
@@ -80,5 +85,13 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    @Override
+    public void onDebtCreated(Debt debt) {
+        String debtorId = userLocalStore.getLoggedInUser().getId();
+        debt.setDebtorId(debtorId);
+
+        new ServerRequest(this).createDebt(debt);
     }
 }
