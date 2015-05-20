@@ -20,6 +20,7 @@ import java.util.List;
 public class BorrowDialog extends DialogFragment {
 
     private static final String USER_ID_ARG = "userId";
+    private static final String DEBT_TYPE_ARG = "debtType";
 
     public interface DebtCreationListener{
         void onDebtCreated(Debt debt);
@@ -29,15 +30,17 @@ public class BorrowDialog extends DialogFragment {
     UsersAdapter adapter;
 
     String userId;
+    Debt.Type debtType;
 
     private DebtCreationListener debtCreationListener;
 
 
-    static BorrowDialog newInstance(String userId) {
+    static BorrowDialog newInstance(String userId, Debt.Type debtType) {
         BorrowDialog f = new BorrowDialog();
 
         Bundle args = new Bundle();
         args.putString(USER_ID_ARG, userId);
+        args.putString(DEBT_TYPE_ARG, debtType.toString());
         f.setArguments(args);
 
         return f;
@@ -47,11 +50,14 @@ public class BorrowDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userId = getArguments().getString(USER_ID_ARG);
+        debtType = Debt.Type.valueOf(getArguments().getString(DEBT_TYPE_ARG));
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setDialogTitle();
+
         final View view = inflater.inflate(R.layout.borrow_dialog, container);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.sBorrower);
@@ -87,18 +93,18 @@ public class BorrowDialog extends DialogFragment {
                 Integer amountOfMoney = Integer.valueOf(etAmountOfMoney.getText().toString());
 
                 Spinner sBorrower = (Spinner) view.findViewById(R.id.sBorrower);
-                String borrower = userList.get(sBorrower.getSelectedItemPosition()).getId();
+                String borrower = ((User) sBorrower.getSelectedItem()).getId();
 
                 Debt debt = new Debt();
                 debt.setAmountOfMoney(amountOfMoney);
                 debt.setDesc(desc);
 
-                switch (getTag()){
-                    case "borrow":
-                        debt.setBorrowerId(userId);
-                        debt.setDebtorId(borrower);
+                switch (debtType){
+                    case BORROWED:
+                        debt.setBorrowerId(borrower);
+                        debt.setDebtorId(userId);
                         break;
-                    case "lend":
+                    case LOANED:
                         debt.setDebtorId(borrower);
                         debt.setBorrowerId(userId);
                 }
@@ -109,6 +115,17 @@ public class BorrowDialog extends DialogFragment {
         });
 
         return view;
+    }
+
+    private void setDialogTitle() {
+        switch (debtType){
+            case BORROWED:
+                getDialog().setTitle("Borrow");
+                break;
+            case LOANED:
+                getDialog().setTitle("Lend");
+                break;
+        }
     }
 
     private void excludeLoggedInUser(List<User> users) {

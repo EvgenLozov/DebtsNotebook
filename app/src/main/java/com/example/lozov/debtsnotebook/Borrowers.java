@@ -14,8 +14,6 @@ import java.util.List;
 
 
 public class Borrowers extends ActionBarActivity {
-
-    public static final String BORROWER_ID = "com.example.lozov.debtsnotebook.BORROWER_ID";
     List<User> borrowersList = new ArrayList<>();
     UsersAdapter adapter;
 
@@ -49,7 +47,8 @@ public class Borrowers extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent(Borrowers.this, Debts.class);
-                intent.putExtra(BORROWER_ID, borrowersList.get(position).getId());
+                intent.putExtra(Debts.BORROWER_ID, borrowersList.get(position).getId());
+                intent.putExtra(Debts.DEBTOR_ID, userLocalStore.getLoggedInUser().getId());
                 startActivity(intent);
             }
         });
@@ -70,6 +69,9 @@ public class Borrowers extends ActionBarActivity {
                 userLocalStore.setUserLoggedIn(false);
 
                 startActivity(new Intent(this, Login.class));
+                return true;
+            case R.id.action_debtors:
+                startActivity(new Intent(this, Debtors.class));
                 return true;
 
             default:

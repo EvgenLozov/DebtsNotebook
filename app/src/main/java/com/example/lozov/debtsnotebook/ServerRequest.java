@@ -33,7 +33,8 @@ import java.util.List;
 public class ServerRequest {
     public static final int CONNECTION_TIMEOUT = 1000 * 15;
 //    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
-    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
+//    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
+    public static final String SERVER_ADDRESS = "http://192.168.1.82:8080";
     private static final String LOGIN_URL = "/login";
 
     ProgressDialog progressDialog;
@@ -75,9 +76,9 @@ public class ServerRequest {
         new CreateDebtAsyncTask(debt).execute();
     }
 
-    public void fetchDebts(User loggedInUser, String borrowerId, GetDebtsCallback callback) {
+    public void fetchDebts(String debtorId, String borrowerId, GetDebtsCallback callback) {
         progressDialog.show();
-        new FetchDebtsAsyncTask(loggedInUser, borrowerId, callback).execute();
+        new FetchDebtsAsyncTask(debtorId, borrowerId, callback).execute();
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void>{
@@ -312,12 +313,12 @@ public class ServerRequest {
     }
 
     public class FetchDebtsAsyncTask extends AsyncTask<Void, Void, List<Debt>>{
-        User user;
+        String debtorId;
         String borrowerId;
         GetDebtsCallback callback;
 
-        public FetchDebtsAsyncTask(User user, String borrowerId, GetDebtsCallback callback) {
-            this.user = user;
+        public FetchDebtsAsyncTask(String debtorId, String borrowerId, GetDebtsCallback callback) {
+            this.debtorId = debtorId;
             this.borrowerId = borrowerId;
             this.callback = callback;
         }
@@ -330,7 +331,7 @@ public class ServerRequest {
 
             HttpClient httpClient = new DefaultHttpClient(httpParams);
 
-            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + user.getId() +
+            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + debtorId +
                                                             "/debt?" + "borrowerId=" + borrowerId);
 
             List<Debt> returnedDebts = new ArrayList<>();

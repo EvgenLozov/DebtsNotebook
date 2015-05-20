@@ -5,8 +5,10 @@
 
     <TextView android:id="@+id/tvUsername"
         android:singleLine="true"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="?android:attr/listPreferredItemHeight"
         android:ellipsize="marquee"/>
 </LinearLayout>

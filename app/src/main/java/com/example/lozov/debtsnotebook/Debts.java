@@ -17,6 +17,9 @@ import java.util.List;
 
 public class Debts extends ActionBarActivity {
 
+    public static final String BORROWER_ID = "com.example.lozov.debtsnotebook.BORROWER_ID";
+    public static final String DEBTOR_ID = "com.example.lozov.debtsnotebook.DEBTOR_ID";
+
     ListView lvDebts;
     DebtsAdapter debtsAdapter;
     UserLocalStore userLocalStore;
@@ -37,9 +40,10 @@ public class Debts extends ActionBarActivity {
 
     private void populateAdapter() {
         Intent intent = getIntent();
-        String borrowerId = intent.getStringExtra(Borrowers.BORROWER_ID);
+        String debtorId = intent.getStringExtra(DEBTOR_ID);
+        String borrowerId = intent.getStringExtra(BORROWER_ID);
 
-        new ServerRequest(this).fetchDebts(userLocalStore.getLoggedInUser(), borrowerId, new GetDebtsCallback() {
+        new ServerRequest(this).fetchDebts(debtorId, borrowerId, new GetDebtsCallback() {
             @Override
             public void done(List<Debt> debts) {
                 debtsAdapter.clear();

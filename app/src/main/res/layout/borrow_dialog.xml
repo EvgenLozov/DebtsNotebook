@@ -10,7 +10,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="4dp"
+        style="@style/spinner_style"/>
 
     <EditText
         android:id="@+id/etDebtDesc"
@@ -21,7 +22,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="Description" />
+        android:hint="For what?" />
 
     <EditText
         android:id="@+id/etAmountOfMoney"
@@ -33,7 +34,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:hint="How match .."/>
+        android:hint="How match?"/>
 
     <Button
         android:id="@+id/bCreateDebt"

@@ -7,7 +7,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
 <Button
-    android:id="@+id/bLend"
+    android:id="@+id/bBorrow"
     android:text="Borrow"
     android:layout_width="188dip"
     android:layout_height="100dip"
@@ -18,14 +18,14 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_marginTop="111dp" />
 
 <Button
-    android:id="@+id/bBorrow"
+    android:id="@+id/bLend"
     android:text="Lend"
     android:layout_width="188dip"
     android:layout_height="100dip"
     android:textSize="18sp"
     android:textStyle="bold"
-    android:layout_below="@+id/bLend"
-    android:layout_alignLeft="@+id/bLend"
-    android:layout_alignStart="@+id/bLend" />
+    android:layout_below="@+id/bBorrow"
+    android:layout_alignLeft="@+id/bBorrow"
+    android:layout_alignStart="@+id/bBorrow" />
 
 </RelativeLayout>

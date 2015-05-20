@@ -49,10 +49,10 @@
         <activity
             android:name=".Debts"
             android:label="@string/title_activity_debts"
-            android:parentActivityName=".Borrowers" >
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.lozov.debtsnotebook.Borrowers" />
+                android:value="com.example.lozov.debtsnotebook.MainActivity" />
         </activity>
     </application>
 

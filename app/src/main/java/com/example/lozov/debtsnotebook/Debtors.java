@@ -15,9 +15,6 @@ import java.util.List;
 
 
 public class Debtors extends ActionBarActivity {
-
-    public static final String BORROWER_ID = "com.example.lozov.debtsnotebook.BORROWER_ID";
-
     ListView lvMyDebtors;
     UserLocalStore userLocalStore;
 
@@ -36,12 +33,12 @@ public class Debtors extends ActionBarActivity {
 
         new ServerRequest(this).fetchDebtors(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
             @Override
-            public void done(List<User> borrowers) {
+            public void done(List<User> debtors) {
                 debtorsList.clear();
                 adapter.clear();
 
-                debtorsList.addAll(borrowers);
-                adapter.addAll(borrowers);
+                debtorsList.addAll(debtors);
+                adapter.addAll(debtors);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -50,7 +47,8 @@ public class Debtors extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent(Debtors.this, Debts.class);
-                intent.putExtra(BORROWER_ID, userLocalStore.getLoggedInUser().getId());
+                intent.putExtra(Debts.BORROWER_ID, userLocalStore.getLoggedInUser().getId());
+                intent.putExtra(Debts.DEBTOR_ID, debtorsList.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -71,6 +69,9 @@ public class Debtors extends ActionBarActivity {
                 userLocalStore.setUserLoggedIn(false);
 
                 startActivity(new Intent(this, Login.class));
+                return true;
+            case R.id.action_borrowers:
+                startActivity(new Intent(this, Borrowers.class));
                 return true;
 
             default:

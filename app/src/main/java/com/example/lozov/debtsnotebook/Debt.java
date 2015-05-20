@@ -108,4 +108,8 @@ public class Debt {
     public static enum Status{
         OPEN, CLOSED
     }
+
+    public static enum Type{
+        BORROWED, LOANED
+    }
 }

@@ -68,10 +68,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.bBorrow:
-                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId()).show(getSupportFragmentManager(), "borrow");
+                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.BORROWED).show(getSupportFragmentManager(), "borrow");
                 break;
             case R.id.bLend:
-                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId()).show(getSupportFragmentManager(), "lend");
+                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.LOANED).show(getSupportFragmentManager(), "lend");
         }
     }
 
