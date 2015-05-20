@@ -7,9 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,7 @@ public class Borrowers extends ActionBarActivity {
 
     public static final String BORROWER_ID = "com.example.lozov.debtsnotebook.BORROWER_ID";
     List<User> borrowersList = new ArrayList<>();
-    BorrowersAdapter adapter;
+    UsersAdapter adapter;
 
     ListView lvMyBorrowers;
     UserLocalStore userLocalStore;
@@ -32,7 +30,7 @@ public class Borrowers extends ActionBarActivity {
 
         lvMyBorrowers = (ListView) findViewById(R.id.lvMyBorrowers);
 
-        adapter = new BorrowersAdapter(this, new ArrayList<User>());
+        adapter = new UsersAdapter(this, new ArrayList<User>());
         lvMyBorrowers.setAdapter(adapter);
 
         new ServerRequest(this).fetchBorrowers(userLocalStore.getLoggedInUser(), new GetUsersCallback() {

@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * Created by lozov on 19.05.15.
  */
-public class UserSpinnerAdapter extends ArrayAdapter<User> {
+public class UsersAdapter extends ArrayAdapter<User> {
 
-    public UserSpinnerAdapter(Context context, List<User> objects) {
+    public UsersAdapter(Context context, List<User> objects) {
         super(context, android.R.layout.simple_spinner_item, objects);
     }
 
