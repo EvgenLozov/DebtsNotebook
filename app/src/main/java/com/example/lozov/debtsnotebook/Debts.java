@@ -3,26 +3,64 @@ package com.example.lozov.debtsnotebook;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Debts extends ActionBarActivity {
 
-    TextView tvBorrowerId;
+    ListView lvDebts;
+    DebtsAdapter debtsAdapter;
+    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debts);
+        userLocalStore = new UserLocalStore(this);
 
-        tvBorrowerId = (TextView) findViewById(R.id.tvBorrowerId);
+        lvDebts = (ListView) findViewById(R.id.lvDebts);
 
+        debtsAdapter = new DebtsAdapter(this, new ArrayList<Debt>());
+        lvDebts.setAdapter(debtsAdapter);
+
+        populateAdapter();
+    }
+
+    private void populateAdapter() {
         Intent intent = getIntent();
         String borrowerId = intent.getStringExtra(Borrowers.BORROWER_ID);
 
-        tvBorrowerId.setText(borrowerId);
+        new ServerRequest(this).fetchDebts(userLocalStore.getLoggedInUser(), borrowerId, new GetDebtsCallback() {
+            @Override
+            public void done(List<Debt> debts) {
+                debtsAdapter.clear();
+
+                lvDebts.setAdapter(null);
+                lvDebts.addHeaderView(getHeaderView(getTotalDebt(debts)), "Total", false);
+
+                lvDebts.setAdapter(debtsAdapter);
+
+                debtsAdapter.addAll(debts);
+                debtsAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private int getTotalDebt(List<Debt> debts) {
+        Integer result = 0;
+        for (Debt debt : debts) {
+            result += debt.getAmountOfMoney();
+        }
+        return result;
     }
 
 
@@ -46,5 +84,13 @@ public class Debts extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private View getHeaderView(int totalAmount){
+        View headerView = getLayoutInflater().inflate(R.layout.debts_header, null);
+        TextView tvTotalAmountOfMoney = (TextView) headerView.findViewById(R.id.tvTotalAmountOfMoney);
+        tvTotalAmountOfMoney.setText(String.valueOf(totalAmount));
+
+        return headerView;
     }
 }

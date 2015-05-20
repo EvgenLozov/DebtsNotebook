@@ -36,6 +36,9 @@ public class Borrowers extends ActionBarActivity {
         new ServerRequest(this).fetchBorrowers(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
             @Override
             public void done(List<User> borrowers) {
+                borrowersList.clear();
+                adapter.clear();
+
                 borrowersList.addAll(borrowers);
                 adapter.addAll(borrowers);
                 adapter.notifyDataSetChanged();

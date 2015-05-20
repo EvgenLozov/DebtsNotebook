@@ -2,14 +2,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dp" >
+    android:padding="5dp">
 
     <TextView
-        android:id="@+id/tvUsername"
+        android:id="@+id/tvDesc"
+        android:singleLine="true"
+        android:layout_width="265dp"
+        android:textSize="20dp"
+        android:layout_height="match_parent"
+        android:gravity="left"
+        android:ellipsize="marquee"/>
+
+    <TextView
+        android:id="@+id/tvAmountOfMoney"
         android:singleLine="true"
         android:layout_width="match_parent"
-        android:textSize="25dp"
         android:layout_height="match_parent"
+        android:textSize="20dp"
         android:gravity="center"
         android:ellipsize="marquee"/>
+
 </LinearLayout>

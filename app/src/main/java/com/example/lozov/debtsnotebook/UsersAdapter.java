@@ -15,7 +15,7 @@ import java.util.List;
 public class UsersAdapter extends ArrayAdapter<User> {
 
     public UsersAdapter(Context context, List<User> objects) {
-        super(context, android.R.layout.simple_spinner_item, objects);
+        super(context, 0, objects);
     }
 
     @Override

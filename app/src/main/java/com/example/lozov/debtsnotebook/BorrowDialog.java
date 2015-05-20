@@ -42,7 +42,10 @@ public class BorrowDialog extends DialogFragment {
         new ServerRequest(getActivity()).fetchUsers(new GetUsersCallback() {
             @Override
             public void done(List<User> users) {
+                userList.clear();
                 userList.addAll(users);
+
+                adapter.clear();
                 adapter.addAll(users);
                 adapter.notifyDataSetChanged();
             }

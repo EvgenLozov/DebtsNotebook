@@ -1,6 +1,12 @@
 package com.example.lozov.debtsnotebook;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lozov on 19.05.15.
@@ -15,6 +21,20 @@ public class Debt {
     private Date date;
 
     public Debt() {
+    }
+
+    public Debt(JSONObject jsonObject) {
+        try {
+            this.id = jsonObject.getString("id");
+            this.debtorId = jsonObject.getString("debtorId");
+            this.borrowerId = jsonObject.getString("borrowerId");
+//            this.status = jsonObject.getString("status");
+            this.amountOfMoney = jsonObject.getInt("amountOfMoney");
+            this.desc = jsonObject.getString("desc");
+//            this.date = jsonObject.get("date");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getId() {
@@ -71,6 +91,18 @@ public class Debt {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public static List<Debt> fromJson(JSONArray jsonArray) {
+        ArrayList<Debt> debts = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                debts.add(new Debt(jsonArray.getJSONObject(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return debts;
     }
 
     public static enum Status{

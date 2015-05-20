@@ -24,9 +24,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -70,6 +68,11 @@ public class ServerRequest {
     public void createDebt(Debt debt){
         progressDialog.show();
         new CreateDebtAsyncTask(debt).execute();
+    }
+
+    public void fetchDebts(User loggedInUser, String borrowerId, GetDebtsCallback callback) {
+        progressDialog.show();
+        new FetchDebtsAsyncTask(loggedInUser, borrowerId, callback).execute();
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void>{
@@ -300,6 +303,53 @@ public class ServerRequest {
         protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
             super.onPostExecute(aVoid);
+        }
+    }
+
+    public class FetchDebtsAsyncTask extends AsyncTask<Void, Void, List<Debt>>{
+        User user;
+        String borrowerId;
+        GetDebtsCallback callback;
+
+        public FetchDebtsAsyncTask(User user, String borrowerId, GetDebtsCallback callback) {
+            this.user = user;
+            this.borrowerId = borrowerId;
+            this.callback = callback;
+        }
+
+        @Override
+        protected List<Debt> doInBackground(Void... params) {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpParams, CONNECTION_TIMEOUT);
+
+            HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + user.getId() +
+                                                            "/debt?" + "borrowerId=" + borrowerId);
+
+            List<Debt> returnedDebts = new ArrayList<>();
+            try{
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity entity = response.getEntity();
+                String responseString = EntityUtils.toString(entity);
+
+                JSONArray jsonArray = new JSONArray(responseString);
+
+                returnedDebts = Debt.fromJson(jsonArray);
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return returnedDebts;
+        }
+
+        @Override
+        protected void onPostExecute(List<Debt> debts) {
+            progressDialog.dismiss();
+            callback.done(debts);
+            super.onPostExecute(debts);
         }
     }
 }
