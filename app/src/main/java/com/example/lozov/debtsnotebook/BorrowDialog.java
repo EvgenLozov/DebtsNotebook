@@ -11,12 +11,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by lozov on 19.05.15.
  */
 public class BorrowDialog extends DialogFragment {
+
+    private static final String USER_ID_ARG = "userId";
 
     public interface DebtCreationListener{
         void onDebtCreated(Debt debt);
@@ -25,7 +28,26 @@ public class BorrowDialog extends DialogFragment {
     List<User> userList = new ArrayList<>();
     UsersAdapter adapter;
 
+    String userId;
+
     private DebtCreationListener debtCreationListener;
+
+
+    static BorrowDialog newInstance(String userId) {
+        BorrowDialog f = new BorrowDialog();
+
+        Bundle args = new Bundle();
+        args.putString(USER_ID_ARG, userId);
+        f.setArguments(args);
+
+        return f;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userId = getArguments().getString(USER_ID_ARG);
+    }
 
     @Nullable
     @Override
@@ -43,6 +65,8 @@ public class BorrowDialog extends DialogFragment {
             @Override
             public void done(List<User> users) {
                 userList.clear();
+
+                excludeLoggedInUser(users);
                 userList.addAll(users);
 
                 adapter.clear();
@@ -66,9 +90,18 @@ public class BorrowDialog extends DialogFragment {
                 String borrower = userList.get(sBorrower.getSelectedItemPosition()).getId();
 
                 Debt debt = new Debt();
-                debt.setBorrowerId(borrower);
                 debt.setAmountOfMoney(amountOfMoney);
                 debt.setDesc(desc);
+
+                switch (getTag()){
+                    case "borrow":
+                        debt.setBorrowerId(userId);
+                        debt.setDebtorId(borrower);
+                        break;
+                    case "lend":
+                        debt.setDebtorId(borrower);
+                        debt.setBorrowerId(userId);
+                }
 
                 debtCreationListener.onDebtCreated(debt);
                 getDialog().dismiss();
@@ -76,5 +109,16 @@ public class BorrowDialog extends DialogFragment {
         });
 
         return view;
+    }
+
+    private void excludeLoggedInUser(List<User> users) {
+        Iterator<User> iterator = users.iterator();
+        while (iterator.hasNext()){
+            User user = iterator.next();
+            if (user.getId().equals(userId)){
+                iterator.remove();
+                return;
+            }
+        }
     }
 }

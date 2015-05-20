@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener, BorrowDialog.DebtCreationListener{
 
-    Button bBorrow;
+    Button bBorrow, bLend;
 
     UserLocalStore userLocalStore;
 
@@ -24,8 +24,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         bBorrow = (Button) findViewById(R.id.bBorrow);
+        bLend = (Button) findViewById(R.id.bLend);
 
         bBorrow.setOnClickListener(this);
+        bLend.setOnClickListener(this);
 
         userLocalStore = new UserLocalStore(this);
     }
@@ -66,7 +68,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.bBorrow:
-                new BorrowDialog().show(getSupportFragmentManager(), "borrow");
+                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId()).show(getSupportFragmentManager(), "borrow");
+                break;
+            case R.id.bLend:
+                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId()).show(getSupportFragmentManager(), "lend");
         }
     }
 
@@ -89,9 +94,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onDebtCreated(Debt debt) {
-        String debtorId = userLocalStore.getLoggedInUser().getId();
-        debt.setDebtorId(debtorId);
-
         new ServerRequest(this).createDebt(debt);
     }
 }
