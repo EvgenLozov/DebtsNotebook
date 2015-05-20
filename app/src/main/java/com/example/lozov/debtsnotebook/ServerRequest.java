@@ -60,6 +60,11 @@ public class ServerRequest {
         new FetchBorrowersAsyncTask(callback).execute(user.getId());
     }
 
+    public void fetchDebtors(User user, GetUsersCallback callback){
+        progressDialog.show();
+        new FetchDebtorsAsyncTask(callback).execute(user.getId());
+    }
+
     public void fetchUsers(GetUsersCallback callback){
         progressDialog.show();
         new FetchUsersAsyncTask(callback).execute();
@@ -350,6 +355,49 @@ public class ServerRequest {
             progressDialog.dismiss();
             callback.done(debts);
             super.onPostExecute(debts);
+        }
+    }
+
+    private class FetchDebtorsAsyncTask extends AsyncTask<String, Void, List<User>>{
+
+        GetUsersCallback callback;
+
+        public FetchDebtorsAsyncTask(GetUsersCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        protected List<User> doInBackground(String... params) {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpParams, CONNECTION_TIMEOUT);
+
+            HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + params[0] + "/debtors");
+
+            List<User> returnedUsers = new ArrayList<>();
+            try{
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity entity = response.getEntity();
+                String responseString = EntityUtils.toString(entity);
+
+                JSONArray jsonArray = new JSONArray(responseString);
+
+                returnedUsers = User.fromJson(jsonArray);
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return returnedUsers;
+        }
+
+        @Override
+        protected void onPostExecute(List<User> returnedUsers) {
+            progressDialog.dismiss();
+            callback.done(returnedUsers);
+            super.onPostExecute(returnedUsers);
         }
     }
 }

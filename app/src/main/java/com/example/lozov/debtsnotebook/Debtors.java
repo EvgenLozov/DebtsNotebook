@@ -5,25 +5,55 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Debtors extends ActionBarActivity {
 
-    String[] debtors = { "Даша", "Таня", "Витя", "Фндрей" };
+    public static final String BORROWER_ID = "com.example.lozov.debtsnotebook.BORROWER_ID";
 
     ListView lvMyDebtors;
     UserLocalStore userLocalStore;
+
+    List<User> debtorsList = new ArrayList<>();
+    UsersAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debtors);
+        userLocalStore = new UserLocalStore(this);
 
         lvMyDebtors = (ListView) findViewById(R.id.lvMyDebtors);
+        adapter = new UsersAdapter(this, new ArrayList<User>());
+        lvMyDebtors.setAdapter(adapter);
 
-        userLocalStore = new UserLocalStore(this);
+        new ServerRequest(this).fetchDebtors(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
+            @Override
+            public void done(List<User> borrowers) {
+                debtorsList.clear();
+                adapter.clear();
+
+                debtorsList.addAll(borrowers);
+                adapter.addAll(borrowers);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        lvMyDebtors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = new Intent(Debtors.this, Debts.class);
+                intent.putExtra(BORROWER_ID, userLocalStore.getLoggedInUser().getId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -46,18 +76,5 @@ public class Debtors extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayMyDebtors();
-    }
-
-    private void displayMyDebtors() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, debtors);
-
-        lvMyDebtors.setAdapter(adapter);
     }
 }
