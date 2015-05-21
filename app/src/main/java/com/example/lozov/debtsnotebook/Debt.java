@@ -14,7 +14,7 @@ import java.util.List;
 public class Debt {
     private String id;
     private String debtorId;
-    private String borrowerId;
+    private String lenderId;
     private Status status;
     private Integer amountOfMoney;
     private String desc;
@@ -27,7 +27,7 @@ public class Debt {
         try {
             this.id = jsonObject.getString("id");
             this.debtorId = jsonObject.getString("debtorId");
-            this.borrowerId = jsonObject.getString("borrowerId");
+            this.lenderId = jsonObject.getString("lenderId");
 //            this.status = jsonObject.getString("status");
             this.amountOfMoney = jsonObject.getInt("amountOfMoney");
             this.desc = jsonObject.getString("desc");
@@ -53,12 +53,12 @@ public class Debt {
         this.debtorId = debtorId;
     }
 
-    public String getBorrowerId() {
-        return borrowerId;
+    public String getLenderId() {
+        return lenderId;
     }
 
-    public void setBorrowerId(String borrowerId) {
-        this.borrowerId = borrowerId;
+    public void setLenderId(String lenderId) {
+        this.lenderId = lenderId;
     }
 
     public Status getStatus() {

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by lozov on 19.05.15.
  */
-public class BorrowDialog extends DialogFragment {
+public class DebtCreationDialog extends DialogFragment {
 
     private static final String USER_ID_ARG = "userId";
     private static final String DEBT_TYPE_ARG = "debtType";
@@ -35,8 +35,8 @@ public class BorrowDialog extends DialogFragment {
     private DebtCreationListener debtCreationListener;
 
 
-    static BorrowDialog newInstance(String userId, Debt.Type debtType) {
-        BorrowDialog f = new BorrowDialog();
+    static DebtCreationDialog newInstance(String userId, Debt.Type debtType) {
+        DebtCreationDialog f = new DebtCreationDialog();
 
         Bundle args = new Bundle();
         args.putString(USER_ID_ARG, userId);
@@ -58,9 +58,9 @@ public class BorrowDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setDialogTitle();
 
-        final View view = inflater.inflate(R.layout.borrow_dialog, container);
+        final View view = inflater.inflate(R.layout.debt_creation_dialog, container);
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.sBorrower);
+        Spinner spinner = (Spinner) view.findViewById(R.id.sUser);
         // Create an ArrayAdapter using the string array and a default spinner layout
         adapter = new UsersAdapter(getActivity(), new ArrayList<User>());
 
@@ -92,8 +92,8 @@ public class BorrowDialog extends DialogFragment {
                 EditText etAmountOfMoney = (EditText) view.findViewById(R.id.etAmountOfMoney);
                 Integer amountOfMoney = Integer.valueOf(etAmountOfMoney.getText().toString());
 
-                Spinner sBorrower = (Spinner) view.findViewById(R.id.sBorrower);
-                String borrower = ((User) sBorrower.getSelectedItem()).getId();
+                Spinner sUser = (Spinner) view.findViewById(R.id.sUser);
+                String lender = ((User) sUser.getSelectedItem()).getId();
 
                 Debt debt = new Debt();
                 debt.setAmountOfMoney(amountOfMoney);
@@ -101,12 +101,12 @@ public class BorrowDialog extends DialogFragment {
 
                 switch (debtType){
                     case BORROWED:
-                        debt.setBorrowerId(borrower);
+                        debt.setLenderId(lender);
                         debt.setDebtorId(userId);
                         break;
                     case LOANED:
-                        debt.setDebtorId(borrower);
-                        debt.setBorrowerId(userId);
+                        debt.setDebtorId(lender);
+                        debt.setLenderId(userId);
                 }
 
                 debtCreationListener.onDebtCreated(debt);

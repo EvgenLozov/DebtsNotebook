@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener, BorrowDialog.DebtCreationListener{
+public class MainActivity extends ActionBarActivity implements View.OnClickListener, DebtCreationDialog.DebtCreationListener{
 
     Button bBorrow, bLend;
 
@@ -50,8 +47,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 startActivity(new Intent(this, Login.class));
                 return true;
 
-            case R.id.action_borrowers:
-                startActivity(new Intent(this, Borrowers.class));
+            case R.id.action_lenders:
+                startActivity(new Intent(this, Lenders.class));
                 break;
 
             case R.id.action_debtors:
@@ -68,10 +65,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.bBorrow:
-                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.BORROWED).show(getSupportFragmentManager(), "borrow");
+                DebtCreationDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.BORROWED).show(getSupportFragmentManager(), "borrow");
                 break;
             case R.id.bLend:
-                BorrowDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.LOANED).show(getSupportFragmentManager(), "lend");
+                DebtCreationDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.LOANED).show(getSupportFragmentManager(), "lend");
         }
     }
 

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/action_borrowers"
-        android:title="@string/action_myBorrowers"
+    <item android:id="@+id/action_lenders"
+        android:title="@string/action_myLenders"
         android:orderInCategory="100"
         app:showAsAction="never" />
 

@@ -33,8 +33,8 @@ import java.util.List;
 public class ServerRequest {
     public static final int CONNECTION_TIMEOUT = 1000 * 15;
 //    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
-//    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
-    public static final String SERVER_ADDRESS = "http://192.168.1.82:8080";
+    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
+//    public static final String SERVER_ADDRESS = "http://192.168.1.82:8080";
     private static final String LOGIN_URL = "/login";
 
     ProgressDialog progressDialog;
@@ -56,9 +56,9 @@ public class ServerRequest {
         new FetchUserDataAsyncTask(user, userCallback).execute();
     }
 
-    public void fetchBorrowers(User user, GetUsersCallback callback){
+    public void fetchLenders(User user, GetUsersCallback callback){
         progressDialog.show();
-        new FetchBorrowersAsyncTask(callback).execute(user.getId());
+        new FetchLendersAsyncTask(callback).execute(user.getId());
     }
 
     public void fetchDebtors(User user, GetUsersCallback callback){
@@ -76,9 +76,9 @@ public class ServerRequest {
         new CreateDebtAsyncTask(debt).execute();
     }
 
-    public void fetchDebts(String debtorId, String borrowerId, GetDebtsCallback callback) {
+    public void fetchDebts(String debtorId, String lenderId, GetDebtsCallback callback) {
         progressDialog.show();
-        new FetchDebtsAsyncTask(debtorId, borrowerId, callback).execute();
+        new FetchDebtsAsyncTask(debtorId, lenderId, callback).execute();
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void>{
@@ -179,11 +179,11 @@ public class ServerRequest {
         }
     }
 
-    public class FetchBorrowersAsyncTask extends AsyncTask<String, Void, List<User>>{
+    public class FetchLendersAsyncTask extends AsyncTask<String, Void, List<User>>{
 
         GetUsersCallback callback;
 
-        public FetchBorrowersAsyncTask(GetUsersCallback callback) {
+        public FetchLendersAsyncTask(GetUsersCallback callback) {
             this.callback = callback;
         }
 
@@ -195,7 +195,7 @@ public class ServerRequest {
 
             HttpClient httpClient = new DefaultHttpClient(httpParams);
 
-            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + params[0] + "/borrowers");
+            HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + params[0] + "/lenders");
 
             List<User> returnedUsers = new ArrayList<>();
             try{
@@ -286,7 +286,7 @@ public class ServerRequest {
             JSONObject dataToSend = new JSONObject();
             try {
                 dataToSend.put("debtorId", debt.getDebtorId());
-                dataToSend.put("borrowerId", debt.getBorrowerId());
+                dataToSend.put("lenderId", debt.getLenderId());
                 dataToSend.put("amountOfMoney", debt.getAmountOfMoney());
                 dataToSend.put("desc", debt.getDesc());
             } catch (JSONException e) {
@@ -314,12 +314,12 @@ public class ServerRequest {
 
     public class FetchDebtsAsyncTask extends AsyncTask<Void, Void, List<Debt>>{
         String debtorId;
-        String borrowerId;
+        String lenderId;
         GetDebtsCallback callback;
 
-        public FetchDebtsAsyncTask(String debtorId, String borrowerId, GetDebtsCallback callback) {
+        public FetchDebtsAsyncTask(String debtorId, String lenderId, GetDebtsCallback callback) {
             this.debtorId = debtorId;
-            this.borrowerId = borrowerId;
+            this.lenderId = lenderId;
             this.callback = callback;
         }
 
@@ -332,7 +332,7 @@ public class ServerRequest {
             HttpClient httpClient = new DefaultHttpClient(httpParams);
 
             HttpGet httpGet = new HttpGet(SERVER_ADDRESS + "/user/" + debtorId +
-                                                            "/debt?" + "borrowerId=" + borrowerId);
+                                                            "/debt?" + "lenderId=" + lenderId);
 
             List<Debt> returnedDebts = new ArrayList<>();
             try{

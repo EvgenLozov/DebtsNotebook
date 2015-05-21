@@ -3,11 +3,9 @@ package com.example.lozov.debtsnotebook;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,8 +15,9 @@ import java.util.List;
 
 public class Debts extends ActionBarActivity {
 
-    public static final String BORROWER_ID = "com.example.lozov.debtsnotebook.BORROWER_ID";
+    public static final String LENDER_ID = "com.example.lozov.debtsnotebook.LENDER_ID";
     public static final String DEBTOR_ID = "com.example.lozov.debtsnotebook.DEBTOR_ID";
+    public static final String TITLE = "title";
 
     ListView lvDebts;
     DebtsAdapter debtsAdapter;
@@ -28,6 +27,10 @@ public class Debts extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debts);
+        Intent intent = getIntent();
+        String title = intent.getStringExtra(TITLE);
+        setTitle(title);
+
         userLocalStore = new UserLocalStore(this);
 
         lvDebts = (ListView) findViewById(R.id.lvDebts);
@@ -41,9 +44,9 @@ public class Debts extends ActionBarActivity {
     private void populateAdapter() {
         Intent intent = getIntent();
         String debtorId = intent.getStringExtra(DEBTOR_ID);
-        String borrowerId = intent.getStringExtra(BORROWER_ID);
+        String lenderId = intent.getStringExtra(LENDER_ID);
 
-        new ServerRequest(this).fetchDebts(debtorId, borrowerId, new GetDebtsCallback() {
+        new ServerRequest(this).fetchDebts(debtorId, lenderId, new GetDebtsCallback() {
             @Override
             public void done(List<Debt> debts) {
                 debtsAdapter.clear();

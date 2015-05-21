@@ -5,12 +5,12 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_register">Register</string>
-    <string name="title_activity_myborrowers">My borrowers</string>
+    <string name="title_activity_mylenders">My lenders</string>
 
-    <string name="action_myBorrowers">My borrowers</string>
+    <string name="action_myLenders">My lenders</string>
     <string name="action_myDebtors">My debtors</string>
     <string name="action_logout">Logout</string>
-    <string name="title_activity_borrowers">Borrowers</string>
+    <string name="title_activity_lenders">Lenders</string>
     <string name="title_activity_debtors">Debtors</string>
     <string name="title_activity_debts">Debts</string>
 

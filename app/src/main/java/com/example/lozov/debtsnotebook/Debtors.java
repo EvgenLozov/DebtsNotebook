@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class Debtors extends ActionBarActivity {
     ListView lvMyDebtors;
     UserLocalStore userLocalStore;
 
-    List<User> debtorsList = new ArrayList<>();
     UsersAdapter adapter;
 
     @Override
@@ -34,10 +32,7 @@ public class Debtors extends ActionBarActivity {
         new ServerRequest(this).fetchDebtors(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
             @Override
             public void done(List<User> debtors) {
-                debtorsList.clear();
                 adapter.clear();
-
-                debtorsList.addAll(debtors);
                 adapter.addAll(debtors);
                 adapter.notifyDataSetChanged();
             }
@@ -47,8 +42,9 @@ public class Debtors extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent(Debtors.this, Debts.class);
-                intent.putExtra(Debts.BORROWER_ID, userLocalStore.getLoggedInUser().getId());
-                intent.putExtra(Debts.DEBTOR_ID, debtorsList.get(position).getId());
+                intent.putExtra(Debts.LENDER_ID, userLocalStore.getLoggedInUser().getId());
+                intent.putExtra(Debts.DEBTOR_ID, ((User) lvMyDebtors.getItemAtPosition(position)).getId());
+                intent.putExtra(Debts.TITLE, "Debts of " + ((User) lvMyDebtors.getItemAtPosition(position)).getUsername());
                 startActivity(intent);
             }
         });
@@ -70,8 +66,8 @@ public class Debtors extends ActionBarActivity {
 
                 startActivity(new Intent(this, Login.class));
                 return true;
-            case R.id.action_borrowers:
-                startActivity(new Intent(this, Borrowers.class));
+            case R.id.action_lenders:
+                startActivity(new Intent(this, Lenders.class));
                 return true;
 
             default:

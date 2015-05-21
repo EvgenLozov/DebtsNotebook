@@ -13,42 +13,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Borrowers extends ActionBarActivity {
-    List<User> borrowersList = new ArrayList<>();
+public class Lenders extends ActionBarActivity {
     UsersAdapter adapter;
 
-    ListView lvMyBorrowers;
+    ListView lvMyLenders;
     UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_borrowers);
+        setContentView(R.layout.activity_lenders);
         userLocalStore = new UserLocalStore(this);
 
-        lvMyBorrowers = (ListView) findViewById(R.id.lvMyBorrowers);
+        lvMyLenders = (ListView) findViewById(R.id.lvMyLenders);
 
         adapter = new UsersAdapter(this, new ArrayList<User>());
-        lvMyBorrowers.setAdapter(adapter);
+        lvMyLenders.setAdapter(adapter);
 
-        new ServerRequest(this).fetchBorrowers(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
+        new ServerRequest(this).fetchLenders(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
             @Override
-            public void done(List<User> borrowers) {
-                borrowersList.clear();
+            public void done(List<User> lenders) {
                 adapter.clear();
-
-                borrowersList.addAll(borrowers);
-                adapter.addAll(borrowers);
+                adapter.addAll(lenders);
                 adapter.notifyDataSetChanged();
             }
         });
 
-        lvMyBorrowers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvMyLenders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(Borrowers.this, Debts.class);
-                intent.putExtra(Debts.BORROWER_ID, borrowersList.get(position).getId());
+                Intent intent = new Intent(Lenders.this, Debts.class);
+                intent.putExtra(Debts.LENDER_ID, ((User) lvMyLenders.getItemAtPosition(position)).getId());
                 intent.putExtra(Debts.DEBTOR_ID, userLocalStore.getLoggedInUser().getId());
+                intent.putExtra(Debts.TITLE, "Debts to " + ((User) lvMyLenders.getItemAtPosition(position)).getUsername());
                 startActivity(intent);
             }
         });
@@ -57,7 +54,7 @@ public class Borrowers extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_borrowers, menu);
+        getMenuInflater().inflate(R.menu.menu_lenders, menu);
         return true;
     }
 
