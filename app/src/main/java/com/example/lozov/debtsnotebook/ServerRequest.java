@@ -289,6 +289,8 @@ public class ServerRequest {
                 dataToSend.put("lenderId", debt.getLenderId());
                 dataToSend.put("amountOfMoney", debt.getAmountOfMoney());
                 dataToSend.put("desc", debt.getDesc());
+                dataToSend.put("status", debt.getStatus());
+//                dataToSend.put("date", debt.getDate());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

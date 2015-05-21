@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +27,6 @@ public class DebtCreationDialog extends DialogFragment {
         void onDebtCreated(Debt debt);
     }
 
-    List<User> userList = new ArrayList<>();
     UsersAdapter adapter;
 
     String userId;
@@ -70,10 +70,7 @@ public class DebtCreationDialog extends DialogFragment {
         new ServerRequest(getActivity()).fetchUsers(new GetUsersCallback() {
             @Override
             public void done(List<User> users) {
-                userList.clear();
-
                 excludeLoggedInUser(users);
-                userList.addAll(users);
 
                 adapter.clear();
                 adapter.addAll(users);
@@ -98,6 +95,8 @@ public class DebtCreationDialog extends DialogFragment {
                 Debt debt = new Debt();
                 debt.setAmountOfMoney(amountOfMoney);
                 debt.setDesc(desc);
+                debt.setDate(new Date());
+                debt.setStatus(Debt.Status.OPEN);
 
                 switch (debtType){
                     case BORROWED:
