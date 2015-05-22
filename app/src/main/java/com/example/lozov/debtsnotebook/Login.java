@@ -1,6 +1,7 @@
 package com.example.lozov.debtsnotebook;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.lozov.debtsnotebook.network.GetResourceCallback;
+import com.example.lozov.debtsnotebook.network.LoginRequest;
 
 import java.util.List;
 
@@ -47,7 +51,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
 
                 User user = new User(username, password);
 
-                authenticate(user);
+                authenticate(username, password);
 
                 break;
 
@@ -57,18 +61,23 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
         }
     }
 
-    private void authenticate(User user) {
-        ServerRequest serverRequest = new ServerRequest(this);
-        serverRequest.fetchUserDataInBackground(user, new GetUsersCallback() {
-            @Override
-            public void done(List<User> returnedUsers) {
-                if (returnedUsers == null || returnedUsers.isEmpty()){
-                    showErrorMessage();
-                } else {
-                    logUserIn(returnedUsers.get(0));
-                }
-            }
-        });
+    private void authenticate(String username, String password) {
+        ProgressDialog progressDialog = Util.getProgressDialog(this);
+
+        new LoginRequest(
+                progressDialog,
+                new GetResourceCallback<User>() {
+                    @Override
+                    public void done(User returnedUser) {
+                        if (returnedUser == null){
+                            showErrorMessage();
+                        } else {
+                            logUserIn(returnedUser);
+                        }
+                    }
+                },
+                username,
+                password).execute();
     }
 
     private void logUserIn(User user) {

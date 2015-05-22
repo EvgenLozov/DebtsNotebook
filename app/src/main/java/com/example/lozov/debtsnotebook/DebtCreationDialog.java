@@ -67,7 +67,7 @@ public class DebtCreationDialog extends DialogFragment {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
-        new ServerRequest(getActivity()).fetchUsers(new GetUsersCallback() {
+        new ServerRequest(getActivity()).fetchUsers(new GetResourcesCallback<User>() {
             @Override
             public void done(List<User> users) {
                 excludeLoggedInUser(users);

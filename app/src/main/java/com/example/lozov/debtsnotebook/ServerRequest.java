@@ -46,27 +46,27 @@ public class ServerRequest {
         progressDialog.setMessage("Please wait..");
     }
 
-    public void storeUserDataInBackground(User user, GetUsersCallback userCallback){
+    public void storeUserDataInBackground(User user, GetResourcesCallback<User> userCallback){
         progressDialog.show();
         new StoreUserDataAsyncTask(user, userCallback).execute();
     }
+//
+//    public void fetchUserDataInBackground(User user, GetResourcesCallback<User>  userCallback){
+//        progressDialog.show();
+//        new FetchUserDataAsyncTask(user, userCallback).execute();
+//    }
 
-    public void fetchUserDataInBackground(User user, GetUsersCallback userCallback){
-        progressDialog.show();
-        new FetchUserDataAsyncTask(user, userCallback).execute();
-    }
+//    public void fetchLenders(User user, GetResourcesCallback<User>  callback){
+//        progressDialog.show();
+//        new FetchLendersAsyncTask(callback).execute(user.getId());
+//    }
 
-    public void fetchLenders(User user, GetUsersCallback callback){
-        progressDialog.show();
-        new FetchLendersAsyncTask(callback).execute(user.getId());
-    }
+//    public void fetchDebtors(User user, GetResourcesCallback<User>  callback){
+//        progressDialog.show();
+//        new FetchDebtorsAsyncTask(callback).execute(user.getId());
+//    }
 
-    public void fetchDebtors(User user, GetUsersCallback callback){
-        progressDialog.show();
-        new FetchDebtorsAsyncTask(callback).execute(user.getId());
-    }
-
-    public void fetchUsers(GetUsersCallback callback){
+    public void fetchUsers(GetResourcesCallback<User>  callback){
         progressDialog.show();
         new FetchUsersAsyncTask(callback).execute();
     }
@@ -76,16 +76,16 @@ public class ServerRequest {
         new CreateDebtAsyncTask(debt).execute();
     }
 
-    public void fetchDebts(String debtorId, String lenderId, GetDebtsCallback callback) {
+    public void fetchDebts(String debtorId, String lenderId, GetResourcesCallback<Debt> callback) {
         progressDialog.show();
         new FetchDebtsAsyncTask(debtorId, lenderId, callback).execute();
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void>{
         User user;
-        GetUsersCallback userCallback;
+        GetResourcesCallback<User>  userCallback;
 
-        public StoreUserDataAsyncTask(User user, GetUsersCallback userCallback) {
+        public StoreUserDataAsyncTask(User user, GetResourcesCallback<User>  userCallback) {
             this.user = user;
             this.userCallback = userCallback;
         }
@@ -131,9 +131,9 @@ public class ServerRequest {
 
     public class FetchUserDataAsyncTask extends AsyncTask<Void, Void, User>{
         User user;
-        GetUsersCallback userCallback;
+        GetResourcesCallback<User>  userCallback;
 
-        public FetchUserDataAsyncTask(User user, GetUsersCallback userCallback) {
+        public FetchUserDataAsyncTask(User user, GetResourcesCallback<User>  userCallback) {
             this.user = user;
             this.userCallback = userCallback;
         }
@@ -181,9 +181,9 @@ public class ServerRequest {
 
     public class FetchLendersAsyncTask extends AsyncTask<String, Void, List<User>>{
 
-        GetUsersCallback callback;
+        GetResourcesCallback<User>  callback;
 
-        public FetchLendersAsyncTask(GetUsersCallback callback) {
+        public FetchLendersAsyncTask(GetResourcesCallback<User>  callback) {
             this.callback = callback;
         }
 
@@ -224,9 +224,9 @@ public class ServerRequest {
 
     public class FetchUsersAsyncTask extends AsyncTask<Void, Void, List<User>>{
 
-        GetUsersCallback callback;
+        GetResourcesCallback<User>  callback;
 
-        public FetchUsersAsyncTask(GetUsersCallback callback) {
+        public FetchUsersAsyncTask(GetResourcesCallback<User>  callback) {
             this.callback = callback;
         }
 
@@ -317,9 +317,9 @@ public class ServerRequest {
     public class FetchDebtsAsyncTask extends AsyncTask<Void, Void, List<Debt>>{
         String debtorId;
         String lenderId;
-        GetDebtsCallback callback;
+        GetResourcesCallback<Debt> callback;
 
-        public FetchDebtsAsyncTask(String debtorId, String lenderId, GetDebtsCallback callback) {
+        public FetchDebtsAsyncTask(String debtorId, String lenderId, GetResourcesCallback<Debt> callback) {
             this.debtorId = debtorId;
             this.lenderId = lenderId;
             this.callback = callback;
@@ -361,12 +361,20 @@ public class ServerRequest {
         }
     }
 
-    private class FetchDebtorsAsyncTask extends AsyncTask<String, Void, List<User>>{
+    public static class FetchDebtorsAsyncTask extends AsyncTask<String, Void, List<User>>{
+        private ProgressDialog progressDialog;
+        GetResourcesCallback<User>  callback;
 
-        GetUsersCallback callback;
-
-        public FetchDebtorsAsyncTask(GetUsersCallback callback) {
+        public FetchDebtorsAsyncTask(ProgressDialog progressDialog,
+                                     GetResourcesCallback<User>  callback) {
+            this.progressDialog = progressDialog;
             this.callback = callback;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
         }
 
         @Override
@@ -398,9 +406,9 @@ public class ServerRequest {
 
         @Override
         protected void onPostExecute(List<User> returnedUsers) {
+            super.onPostExecute(returnedUsers);
             progressDialog.dismiss();
             callback.done(returnedUsers);
-            super.onPostExecute(returnedUsers);
         }
     }
 }

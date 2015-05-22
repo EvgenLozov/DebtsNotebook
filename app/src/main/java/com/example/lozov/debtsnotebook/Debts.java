@@ -46,7 +46,7 @@ public class Debts extends ActionBarActivity {
         String debtorId = intent.getStringExtra(DEBTOR_ID);
         String lenderId = intent.getStringExtra(LENDER_ID);
 
-        new ServerRequest(this).fetchDebts(debtorId, lenderId, new GetDebtsCallback() {
+        new ServerRequest(this).fetchDebts(debtorId, lenderId, new GetResourcesCallback<Debt>() {
             @Override
             public void done(List<Debt> debts) {
                 debtsAdapter.clear();

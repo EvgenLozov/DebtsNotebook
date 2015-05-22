@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.example.lozov.debtsnotebook.network.GetDebtorsRequest;
+import com.example.lozov.debtsnotebook.network.GetResourcesRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +33,17 @@ public class Debtors extends ActionBarActivity {
         adapter = new UsersAdapter(this, new ArrayList<User>());
         lvMyDebtors.setAdapter(adapter);
 
-        new ServerRequest(this).fetchDebtors(userLocalStore.getLoggedInUser(), new GetUsersCallback() {
+        ProgressDialog progressDialog = Util.getProgressDialog(this);
+        String userId = userLocalStore.getLoggedInUser().getId();
+
+        new GetDebtorsRequest(progressDialog, new GetResourcesCallback<User>() {
             @Override
             public void done(List<User> debtors) {
                 adapter.clear();
                 adapter.addAll(debtors);
                 adapter.notifyDataSetChanged();
             }
-        });
+        }, userId).execute();
 
         lvMyDebtors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
