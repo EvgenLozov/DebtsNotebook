@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,7 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.List;
+import com.example.lozov.debtsnotebook.network.request.RegisterUserRequest;
+import com.example.lozov.debtsnotebook.network.callback.ResourceCallback;
 
 
 public class Register extends ActionBarActivity implements View.OnClickListener{
@@ -49,12 +51,13 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     }
 
     private void register(User newUser) {
-        ServerRequest registerRequest = new ServerRequest(this);
-        registerRequest.storeUserDataInBackground(newUser, new GetResourcesCallback<User>() {
+        ProgressDialog progressDialog = Util.getProgressDialog(this);
+        new RegisterUserRequest(progressDialog,
+                new ResourceCallback<User>() {
             @Override
-            public void done(List<User> users) {
+            public void done(User user) {
                 startActivity(new Intent(Register.this, Login.class));
             }
-        });
+        }, newUser).execute();
     }
 }

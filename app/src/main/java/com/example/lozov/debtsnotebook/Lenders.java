@@ -10,7 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.lozov.debtsnotebook.network.GetLendersRequest;
+import com.example.lozov.debtsnotebook.network.request.GetLendersRequest;
+import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +36,14 @@ public class Lenders extends ActionBarActivity {
 
         ProgressDialog progressDialog = Util.getProgressDialog(this);
 
-        new GetLendersRequest(progressDialog, new GetResourcesCallback<User>() {
+        new GetLendersRequest(progressDialog, new ResourcesCallback<User>() {
             @Override
             public void done(List<User> lenders) {
                 adapter.clear();
                 adapter.addAll(lenders);
                 adapter.notifyDataSetChanged();
             }
-        }, userLocalStore.getLoggedInUser().getId());
+        }, userLocalStore.getLoggedInUser().getId()).execute();
 
         lvMyLenders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

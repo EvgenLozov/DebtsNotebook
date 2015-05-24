@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.lozov.debtsnotebook.network.request.GetDebtsRequest;
+import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,20 +50,23 @@ public class Debts extends ActionBarActivity {
         String debtorId = intent.getStringExtra(DEBTOR_ID);
         String lenderId = intent.getStringExtra(LENDER_ID);
 
-        new ServerRequest(this).fetchDebts(debtorId, lenderId, new GetResourcesCallback<Debt>() {
-            @Override
-            public void done(List<Debt> debts) {
-                debtsAdapter.clear();
+        ProgressDialog progressDialog = Util.getProgressDialog(this);
 
-                lvDebts.setAdapter(null);
-                lvDebts.addHeaderView(getHeaderView(getTotalDebt(debts)), "Total", false);
+        new GetDebtsRequest(progressDialog,
+                new ResourcesCallback<Debt>() {
+                    @Override
+                    public void done(List<Debt> debts) {
+                        debtsAdapter.clear();
 
-                lvDebts.setAdapter(debtsAdapter);
+                        lvDebts.setAdapter(null);
+                        lvDebts.addHeaderView(getHeaderView(getTotalDebt(debts)), "Total", false);
 
-                debtsAdapter.addAll(debts);
-                debtsAdapter.notifyDataSetChanged();
-            }
-        });
+                        lvDebts.setAdapter(debtsAdapter);
+
+                        debtsAdapter.addAll(debts);
+                        debtsAdapter.notifyDataSetChanged();
+                    }
+                }, debtorId, lenderId).execute();
     }
 
     private int getTotalDebt(List<Debt> debts) {

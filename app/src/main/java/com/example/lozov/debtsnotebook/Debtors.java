@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.lozov.debtsnotebook.network.GetDebtorsRequest;
-import com.example.lozov.debtsnotebook.network.GetResourcesRequest;
+import com.example.lozov.debtsnotebook.network.request.GetDebtorsRequest;
+import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class Debtors extends ActionBarActivity {
         ProgressDialog progressDialog = Util.getProgressDialog(this);
         String userId = userLocalStore.getLoggedInUser().getId();
 
-        new GetDebtorsRequest(progressDialog, new GetResourcesCallback<User>() {
+        new GetDebtorsRequest(progressDialog, new ResourcesCallback<User>() {
             @Override
             public void done(List<User> debtors) {
                 adapter.clear();

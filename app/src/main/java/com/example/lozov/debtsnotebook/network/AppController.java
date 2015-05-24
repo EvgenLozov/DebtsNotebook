@@ -11,12 +11,14 @@ import com.android.volley.toolbox.Volley;
  * Created by lozov on 22.05.15.
  */
 public class AppController extends Application {
-    //    public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
-    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
-    //    public static final String SERVER_ADDRESS = "http://192.168.1.82:8080";
+//        public static final String SERVER_ADDRESS = "http://stark-peak-7912.herokuapp.com";
+//    public static final String SERVER_ADDRESS = "http://10.0.2.2:8080";
+        public static final String SERVER_ADDRESS = "http://192.168.1.82:8080";
 
     public static final String TAG = AppController.class
             .getSimpleName();
+
+    public static final int TIMEOUT_MS = 1000 * 15;
 
     private RequestQueue mRequestQueue;
 

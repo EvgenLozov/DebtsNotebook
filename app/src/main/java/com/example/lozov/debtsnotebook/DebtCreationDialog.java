@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -9,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.example.lozov.debtsnotebook.network.request.GetUsersRequest;
+import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,16 +71,19 @@ public class DebtCreationDialog extends DialogFragment {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
-        new ServerRequest(getActivity()).fetchUsers(new GetResourcesCallback<User>() {
-            @Override
-            public void done(List<User> users) {
-                excludeLoggedInUser(users);
+        ProgressDialog progressDialog = Util.getProgressDialog(getActivity());
 
-                adapter.clear();
-                adapter.addAll(users);
-                adapter.notifyDataSetChanged();
-            }
-        });
+        new GetUsersRequest(progressDialog,
+                            new ResourcesCallback<User>() {
+                                @Override
+                                public void done(List<User> users) {
+                                    excludeLoggedInUser(users);
+
+                                    adapter.clear();
+                                    adapter.addAll(users);
+                                    adapter.notifyDataSetChanged();
+                                }
+                          }).execute();
 
         debtCreationListener = (DebtCreationListener) getActivity();
 

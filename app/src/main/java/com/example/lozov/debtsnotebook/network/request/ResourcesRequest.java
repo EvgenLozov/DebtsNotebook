@@ -1,6 +1,5 @@
-package com.example.lozov.debtsnotebook.network;
+package com.example.lozov.debtsnotebook.network.request;
 
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 
 import com.android.volley.Request;
@@ -8,24 +7,26 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.example.lozov.debtsnotebook.GetResourcesCallback;
+import com.example.lozov.debtsnotebook.network.AppController;
+import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
 /**
  * Created by lozov on 22.05.15.
  */
-public abstract class GetResourcesRequest<T> {
-    private static final String TAG = "getResourcesRequest";
+public abstract class ResourcesRequest<T> {
+    private static final String DEFAULT_TAG = "getResourcesRequest";
 
     private ProgressDialog progressDialog;
-    private GetResourcesCallback<T> callback;
+    private ResourcesCallback<T> callback;
 
     private JsonArrayRequest request;
 
-    public GetResourcesRequest(ProgressDialog progressDialog, GetResourcesCallback<T> callback) {
+    public ResourcesRequest(ProgressDialog progressDialog, ResourcesCallback<T> callback) {
         this.progressDialog = progressDialog;
         this.callback = callback;
     }
@@ -35,21 +36,30 @@ public abstract class GetResourcesRequest<T> {
         request = new JsonArrayRequest(
                 method(),
                 url(),
+                body(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         callback.done(parseResponse(response));
-                        progressDialog.hide();
+                        progressDialog.dismiss();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                progressDialog.hide();
+                VolleyLog.d(getTag(), "Error: " + error.getMessage());
+                progressDialog.dismiss();
             }
         });
 
-        AppController.getInstance().addToRequestQueue(request, TAG);
+        AppController.getInstance().addToRequestQueue(request, getTag());
+    }
+
+    protected String getTag() {
+        return DEFAULT_TAG;
+    }
+
+    protected JSONObject body() {
+        return null;
     }
 
     protected int method(){

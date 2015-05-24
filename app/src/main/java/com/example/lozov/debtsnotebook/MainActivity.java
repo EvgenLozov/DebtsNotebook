@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.lozov.debtsnotebook.network.request.CreateDebtRequest;
+import com.example.lozov.debtsnotebook.network.callback.ResourceCallback;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener, DebtCreationDialog.DebtCreationListener{
@@ -91,6 +95,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onDebtCreated(Debt debt) {
-        new ServerRequest(this).createDebt(debt);
+        ProgressDialog progressDialog = Util.getProgressDialog(this);
+        new CreateDebtRequest(progressDialog, new ResourceCallback<Debt>() {
+            @Override
+            public void done(Debt resource) {
+                //todo validate response
+            }
+        }, debt).execute();
     }
 }

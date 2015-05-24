@@ -10,10 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.lozov.debtsnotebook.network.GetResourceCallback;
-import com.example.lozov.debtsnotebook.network.LoginRequest;
-
-import java.util.List;
+import com.example.lozov.debtsnotebook.network.callback.ResourceCallback;
+import com.example.lozov.debtsnotebook.network.request.LoginRequest;
 
 
 public class Login extends ActionBarActivity implements View.OnClickListener{
@@ -49,8 +47,6 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
 
-                User user = new User(username, password);
-
                 authenticate(username, password);
 
                 break;
@@ -66,7 +62,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
 
         new LoginRequest(
                 progressDialog,
-                new GetResourceCallback<User>() {
+                new ResourceCallback<User>() {
                     @Override
                     public void done(User returnedUser) {
                         if (returnedUser == null){
