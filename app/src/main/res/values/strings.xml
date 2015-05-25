@@ -9,6 +9,8 @@
 
     <string name="action_myLenders">My lenders</string>
     <string name="action_myDebtors">My debtors</string>
+    <string name="action_borrow">Borrow</string>
+    <string name="action_lend">Lend</string>
     <string name="action_logout">Logout</string>
     <string name="title_activity_lenders">Lenders</string>
     <string name="title_activity_debtors">Debtors</string>

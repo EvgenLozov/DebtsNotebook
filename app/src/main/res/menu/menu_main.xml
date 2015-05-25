@@ -3,6 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
+    <item android:id="@+id/action_borrow"
+        android:title="@string/action_borrow"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/action_lend"
+        android:title="@string/action_lend"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom|withText" />
+
     <item android:id="@+id/action_lenders"
         android:title="@string/action_myLenders"
         android:orderInCategory="100"

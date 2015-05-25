@@ -59,6 +59,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 startActivity(new Intent(this, Debtors.class));
                 break;
 
+            case R.id.action_borrow:
+                DebtCreationDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.BORROWED).show(getSupportFragmentManager(), "borrow");
+                break;
+
+            case R.id.action_lend:
+                DebtCreationDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.LOANED).show(getSupportFragmentManager(), "lend");
+                break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
