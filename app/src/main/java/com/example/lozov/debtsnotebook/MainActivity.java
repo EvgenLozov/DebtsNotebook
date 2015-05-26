@@ -88,5 +88,7 @@ public class MainActivity extends AppCompatActivity implements DebtCreationDialo
                 //todo validate response
             }
         }, debt).execute();
+        finish();
+        startActivity(getIntent());
     }
 }
