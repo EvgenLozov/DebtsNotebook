@@ -13,16 +13,6 @@
         android:orderInCategory="100"
         app:showAsAction="ifRoom|withText" />
 
-    <item android:id="@+id/action_lenders"
-        android:title="@string/action_myLenders"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/action_debtors"
-        android:title="@string/action_myDebtors"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-
     <item android:id="@+id/action_logout"
         android:title="@string/action_logout"
         android:orderInCategory="100"
