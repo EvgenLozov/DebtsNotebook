@@ -32,28 +32,8 @@
             android:label="@string/title_activity_register" >
         </activity>
         <activity
-            android:name=".Lenders"
-            android:label="@string/title_activity_lenders"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.lozov.debtsnotebook.MainActivity" />
-        </activity>
-        <activity
-            android:name=".Debtors"
-            android:label="@string/title_activity_debtors"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.lozov.debtsnotebook.MainActivity" />
-        </activity>
-        <activity
             android:name=".Debts"
-            android:label="@string/title_activity_debts"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.lozov.debtsnotebook.MainActivity" />
+            android:label="@string/title_activity_debts">
         </activity>
     </application>
 

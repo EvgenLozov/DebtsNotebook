@@ -19,13 +19,15 @@ public class MainPagerAdapter extends FragmentPagerAdapter{
                 return new DebtorsTab();
             case 1:
                 return new LendersTab();
+            case 2:
+                return new AllUsersTab();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -35,6 +37,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter{
                 return "My Debtors";
             case 1:
                 return "My Lenders";
+            case 2:
+                return "All";
         }
         return "";
     }

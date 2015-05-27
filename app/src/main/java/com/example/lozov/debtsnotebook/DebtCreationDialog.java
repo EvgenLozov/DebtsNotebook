@@ -77,7 +77,7 @@ public class DebtCreationDialog extends DialogFragment {
                             new ResourcesCallback<User>() {
                                 @Override
                                 public void done(List<User> users) {
-                                    excludeLoggedInUser(users);
+                                    Util.removeUserFromList(userId, users);
 
                                     adapter.clear();
                                     adapter.addAll(users);
@@ -131,17 +131,6 @@ public class DebtCreationDialog extends DialogFragment {
             case LOANED:
                 getDialog().setTitle("Lend");
                 break;
-        }
-    }
-
-    private void excludeLoggedInUser(List<User> users) {
-        Iterator<User> iterator = users.iterator();
-        while (iterator.hasNext()){
-            User user = iterator.next();
-            if (user.getId().equals(userId)){
-                iterator.remove();
-                return;
-            }
         }
     }
 }
