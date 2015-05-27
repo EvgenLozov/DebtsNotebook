@@ -2,13 +2,17 @@ package com.example.lozov.debtsnotebook;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lozov.debtsnotebook.network.request.GetDebtsRequest;
 import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
@@ -17,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Debts extends ActionBarActivity {
+public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEditedListener{
 
     public static final String LENDER_ID = "com.example.lozov.debtsnotebook.LENDER_ID";
     public static final String DEBTOR_ID = "com.example.lozov.debtsnotebook.DEBTOR_ID";
@@ -41,6 +45,8 @@ public class Debts extends ActionBarActivity {
 
         debtsAdapter = new DebtsAdapter(this, new ArrayList<Debt>());
         lvDebts.setAdapter(debtsAdapter);
+
+        registerForContextMenu(lvDebts);
 
         populateAdapter();
     }
@@ -106,5 +112,36 @@ public class Debts extends ActionBarActivity {
         tvTotalAmountOfMoney.setText(String.valueOf(totalAmount));
 
         return headerView;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.debt_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.editDebt:
+                Debt debt = (Debt) lvDebts.getItemAtPosition(info.position);
+                EditDebtDialog.newInstance(debt).show(getSupportFragmentManager(), "borrow");
+                return true;
+            case R.id.paidUp:
+                String paidText = "Paid-Up debt : " + ((Debt)lvDebts.getItemAtPosition(info.position)).getDesc();
+                Toast.makeText(this, paidText, Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onDebtEdited(Debt debt) {
+        Toast.makeText(getApplicationContext(),
+                "Debt is edited - desc: " + debt.getDesc() + ", amount: " + debt.getAmountOfMoney(),
+                Toast.LENGTH_LONG).show();
     }
 }

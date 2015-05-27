@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by lozov on 19.05.15.
  */
-public class Debt {
+public class Debt implements Serializable{
     private String id;
     private String debtorId;
     private String lenderId;
