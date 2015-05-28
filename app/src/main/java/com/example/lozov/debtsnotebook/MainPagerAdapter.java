@@ -3,11 +3,12 @@ package com.example.lozov.debtsnotebook;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
  * Created by lozov on 26.05.15.
  */
-public class MainPagerAdapter extends FragmentPagerAdapter{
+public class MainPagerAdapter extends FragmentStatePagerAdapter{
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -41,5 +42,10 @@ public class MainPagerAdapter extends FragmentPagerAdapter{
                 return "All";
         }
         return "";
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 }

@@ -1,6 +1,8 @@
 package com.example.lozov.debtsnotebook.network.request;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -32,7 +34,7 @@ public abstract class ResourcesRequest<T> {
     }
 
     public void execute(){
-        progressDialog.show();
+//        progressDialog.show();
         request = new JsonArrayRequest(
                 method(),
                 url(),
@@ -41,13 +43,16 @@ public abstract class ResourcesRequest<T> {
                     @Override
                     public void onResponse(JSONArray response) {
                         callback.done(parseResponse(response));
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(getTag(), "Error: " + error.getMessage());
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
+                Context context = progressDialog.getContext();
+                Toast.makeText(context, "Unable to load data!", Toast.LENGTH_LONG).show();
+
             }
         });
 

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Debt implements Serializable{
             this.id = jsonObject.getString("id");
             this.debtorId = jsonObject.getString("debtorId");
             this.lenderId = jsonObject.getString("lenderId");
-//            this.status = jsonObject.getString("status");
+            this.status = Status.valueOf(jsonObject.getString("status"));
             this.amountOfMoney = jsonObject.getInt("amountOfMoney");
             this.desc = jsonObject.getString("desc");
 //            this.date = jsonObject.get("date");
@@ -107,10 +108,17 @@ public class Debt implements Serializable{
     }
 
     public static enum Status{
-        OPEN, CLOSED
+        CLOSED, OPEN
     }
 
     public static enum Type{
         BORROWED, LOANED
+    }
+
+    public static class ByStatusCompataror implements Comparator<Debt>{
+        @Override
+        public int compare(Debt lhs, Debt rhs) {
+            return rhs.getStatus().compareTo(lhs.getStatus());
+        }
     }
 }

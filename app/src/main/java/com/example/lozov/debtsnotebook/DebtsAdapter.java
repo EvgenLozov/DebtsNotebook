@@ -1,6 +1,8 @@
 package com.example.lozov.debtsnotebook;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,11 @@ import java.util.List;
  * Created by lozov on 20.05.15.
  */
 public class DebtsAdapter extends ArrayAdapter<Debt> {
+    private List<Debt> debts;
+
     public DebtsAdapter(Context context, List<Debt> objects) {
         super(context, 0, objects);
+        this.debts = objects;
     }
 
     @Override
@@ -32,5 +37,10 @@ public class DebtsAdapter extends ArrayAdapter<Debt> {
         tvAmountOfMoney.setText(String.valueOf(debt.getAmountOfMoney()));
 
         return convertView;
+    }
+
+    private static class DebtViewHolder{
+        TextView tvDesc;
+        TextView tvAmountOfMoney;
     }
 }

@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lozov.debtsnotebook.network.callback.ResourceCallback;
+import com.example.lozov.debtsnotebook.network.request.EditDebtRequest;
 import com.example.lozov.debtsnotebook.network.request.GetDebtsRequest;
 import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
@@ -29,21 +31,31 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
     ListView lvDebts;
     DebtsAdapter debtsAdapter;
+    List<Debt> debtsList;
+
     UserLocalStore userLocalStore;
+
+    private String debtorId;
+    private String lenderId;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debts);
         Intent intent = getIntent();
-        String title = intent.getStringExtra(TITLE);
+        debtorId = intent.getStringExtra(DEBTOR_ID);
+        lenderId = intent.getStringExtra(LENDER_ID);
+
+        title = intent.getStringExtra(TITLE);
         setTitle(title);
 
         userLocalStore = new UserLocalStore(this);
 
-        lvDebts = (ListView) findViewById(R.id.lvDebts);
-
+        debtsList = new ArrayList<>();
         debtsAdapter = new DebtsAdapter(this, new ArrayList<Debt>());
+
+        lvDebts = (ListView) findViewById(R.id.lvDebts);
         lvDebts.setAdapter(debtsAdapter);
 
         registerForContextMenu(lvDebts);
@@ -52,24 +64,18 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
     }
 
     private void populateAdapter() {
-        Intent intent = getIntent();
-        String debtorId = intent.getStringExtra(DEBTOR_ID);
-        String lenderId = intent.getStringExtra(LENDER_ID);
-
-        ProgressDialog progressDialog = Util.getProgressDialog(this);
+        ProgressDialog progressDialog = Util.getProgressDialog(Debts.this);
 
         new GetDebtsRequest(progressDialog,
                 new ResourcesCallback<Debt>() {
                     @Override
                     public void done(List<Debt> debts) {
                         debtsAdapter.clear();
+                        debtsAdapter.clear();
 
-                        lvDebts.setAdapter(null);
-                        lvDebts.addHeaderView(getHeaderView(getTotalDebt(debts)), "Total", false);
-
-                        lvDebts.setAdapter(debtsAdapter);
-
+                        debtsList.addAll(debts);
                         debtsAdapter.addAll(debts);
+                        debtsAdapter.sort(new Debt.ByStatusCompataror());
                         debtsAdapter.notifyDataSetChanged();
                     }
                 }, debtorId, lenderId).execute();
@@ -86,19 +92,14 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_debts, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -140,8 +141,21 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
     @Override
     public void onDebtEdited(Debt debt) {
-        Toast.makeText(getApplicationContext(),
-                "Debt is edited - desc: " + debt.getDesc() + ", amount: " + debt.getAmountOfMoney(),
-                Toast.LENGTH_LONG).show();
+        ProgressDialog progressDialog = Util.getProgressDialog(Debts.this);
+        new EditDebtRequest(progressDialog,
+                new ResourceCallback<Debt>() {
+                    @Override
+                    public void done(Debt debt) {
+                        for (Debt debt1 : debtsList) {
+                            if(debt1.getId().equals(debt.getId())){
+                                debt1.setDesc(debt.getDesc());
+                                debt1.setAmountOfMoney(debt.getAmountOfMoney());
+                                debt1.setStatus(debt.getStatus());
+                                break;
+                            }
+                        }
+                        debtsAdapter.notifyDataSetChanged();
+                    }
+                }, debt).execute();
     }
 }

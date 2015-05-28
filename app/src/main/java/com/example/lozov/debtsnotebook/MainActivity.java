@@ -27,6 +27,23 @@ public class MainActivity extends AppCompatActivity implements DebtCreationDialo
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pagerAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         viewPager.setAdapter(pagerAdapter);
     }
 
