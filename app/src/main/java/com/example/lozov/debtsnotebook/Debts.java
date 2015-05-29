@@ -20,6 +20,7 @@ import com.example.lozov.debtsnotebook.network.request.GetDebtsRequest;
 import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -53,7 +54,7 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
         userLocalStore = new UserLocalStore(this);
 
         debtsList = new ArrayList<>();
-        debtsAdapter = new DebtsAdapter(this, new ArrayList<Debt>());
+        debtsAdapter = new DebtsAdapter(this, debtsList);
 
         lvDebts = (ListView) findViewById(R.id.lvDebts);
         lvDebts.setAdapter(debtsAdapter);
@@ -70,15 +71,12 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
                 new ResourcesCallback<Debt>() {
                     @Override
                     public void done(List<Debt> debts) {
-                        debtsAdapter.clear();
-                        debtsAdapter.clear();
+                        debtsList.clear();
 
                         debtsList.addAll(debts);
-                        debtsAdapter.addAll(debts);
-                        debtsAdapter.sort(new Debt.ByStatusCompataror());
                         debtsAdapter.notifyDataSetChanged();
                     }
-                }, debtorId, lenderId).execute();
+                }, debtorId, lenderId, Debt.Status.OPEN).execute();
     }
 
     private int getTotalDebt(List<Debt> debts) {
@@ -125,14 +123,14 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Debt debt = (Debt) lvDebts.getItemAtPosition(info.position);
         switch (item.getItemId()) {
             case R.id.editDebt:
-                Debt debt = (Debt) lvDebts.getItemAtPosition(info.position);
                 EditDebtDialog.newInstance(debt).show(getSupportFragmentManager(), "borrow");
                 return true;
             case R.id.paidUp:
-                String paidText = "Paid-Up debt : " + ((Debt)lvDebts.getItemAtPosition(info.position)).getDesc();
-                Toast.makeText(this, paidText, Toast.LENGTH_SHORT).show();
+                debt.setStatus(Debt.Status.CLOSED);
+                onDebtEdited(debt);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -141,20 +139,22 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
     @Override
     public void onDebtEdited(Debt debt) {
+        Iterator<Debt> iterator = debtsList.iterator();
+        while (iterator.hasNext()){
+            Debt next = iterator.next();
+            if (next.getId().equals(debt.getId())
+                    && debt.getStatus().equals(Debt.Status.CLOSED)) {
+                iterator.remove();
+            }
+        }
+
+        debtsAdapter.notifyDataSetChanged();
+
         ProgressDialog progressDialog = Util.getProgressDialog(Debts.this);
         new EditDebtRequest(progressDialog,
                 new ResourceCallback<Debt>() {
                     @Override
                     public void done(Debt debt) {
-                        for (Debt debt1 : debtsList) {
-                            if(debt1.getId().equals(debt.getId())){
-                                debt1.setDesc(debt.getDesc());
-                                debt1.setAmountOfMoney(debt.getAmountOfMoney());
-                                debt1.setStatus(debt.getStatus());
-                                break;
-                            }
-                        }
-                        debtsAdapter.notifyDataSetChanged();
                     }
                 }, debt).execute();
     }
