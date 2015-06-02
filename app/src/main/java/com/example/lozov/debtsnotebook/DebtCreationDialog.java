@@ -1,5 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,9 +8,11 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.lozov.debtsnotebook.network.request.GetUsersRequest;
 import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
@@ -55,20 +58,27 @@ public class DebtCreationDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         userId = getArguments().getString(USER_ID_ARG);
         debtType = Debt.Type.valueOf(getArguments().getString(DEBT_TYPE_ARG));
+        setStyle(android.app.DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setDialogTitle();
-
         final View view = inflater.inflate(R.layout.debt_creation_dialog, container);
 
+        TextView tvDialogTitle = (TextView) view.findViewById(R.id.tvDialogTitle);
+        tvDialogTitle.setText(getDialogTitle());
+
         Spinner spinner = (Spinner) view.findViewById(R.id.sUser);
-        // Create an ArrayAdapter using the string array and a default spinner layout
         adapter = new UsersAdapter(getActivity(), new ArrayList<User>());
 
-        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
         ProgressDialog progressDialog = Util.getProgressDialog(getActivity());
@@ -123,14 +133,13 @@ public class DebtCreationDialog extends DialogFragment {
         return view;
     }
 
-    private void setDialogTitle() {
+    private String getDialogTitle() {
         switch (debtType){
             case BORROWED:
-                getDialog().setTitle("Borrow");
-                break;
+                return "Borrow money";
             case LOANED:
-                getDialog().setTitle("Lend");
-                break;
+                return "Lend money";
         }
+        return "Create debt";
     }
 }

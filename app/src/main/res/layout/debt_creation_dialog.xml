@@ -3,15 +3,80 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <Spinner
-        android:id="@+id/sUser"
+
+    <RelativeLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        style="@style/spinner_style"/>
+        android:weightSum="1"
+        android:id="@+id/linlayTitle"
+        android:background="@color/dialogTitleColor">
+
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Borrow money"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/bCreateDebt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To:"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/textView" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/myborder"
+            android:orientation="horizontal" >
+
+            <Spinner
+                android:id="@+id/sUser"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/myborder"
+                android:spinnerMode="dropdown"
+                android:textColor="#FFFFFF" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="2dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/dropdown_icon" />
+        </FrameLayout>
+
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/etDebtDesc"
@@ -36,9 +101,4 @@
         android:fontFamily="sans-serif"
         android:hint="How match?"/>
 
-    <Button
-        android:id="@+id/bCreateDebt"
-        android:text="OK"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>

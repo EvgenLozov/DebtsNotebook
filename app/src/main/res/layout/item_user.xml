@@ -8,8 +8,8 @@
         android:id="@+id/tvUsername"
         android:singleLine="true"
         android:layout_width="match_parent"
-        android:textSize="25dp"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:textSize="25dp"
+        android:gravity="left"
         android:ellipsize="marquee"/>
 </LinearLayout>

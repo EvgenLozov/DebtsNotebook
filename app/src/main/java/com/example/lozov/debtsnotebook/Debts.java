@@ -139,22 +139,23 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
     @Override
     public void onDebtEdited(Debt debt) {
-        Iterator<Debt> iterator = debtsList.iterator();
-        while (iterator.hasNext()){
-            Debt next = iterator.next();
-            if (next.getId().equals(debt.getId())
-                    && debt.getStatus().equals(Debt.Status.CLOSED)) {
-                iterator.remove();
-            }
-        }
-
-        debtsAdapter.notifyDataSetChanged();
 
         ProgressDialog progressDialog = Util.getProgressDialog(Debts.this);
         new EditDebtRequest(progressDialog,
                 new ResourceCallback<Debt>() {
                     @Override
                     public void done(Debt debt) {
+                        Iterator<Debt> iterator = debtsList.iterator();
+                        while (iterator.hasNext()){
+                            Debt next = iterator.next();
+                            if (next.getId().equals(debt.getId())
+                                    && debt.getStatus().equals(Debt.Status.CLOSED)) {
+                                iterator.remove();
+                            }
+                        }
+
+                        debtsAdapter.notifyDataSetChanged();
+
                     }
                 }, debt).execute();
     }

@@ -3,6 +3,7 @@ package com.example.lozov.debtsnotebook;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements DebtCreationDialo
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -66,17 +66,23 @@ public class MainActivity extends AppCompatActivity implements DebtCreationDialo
                 return true;
 
             case R.id.action_borrow:
-                DebtCreationDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.BORROWED).show(getSupportFragmentManager(), "borrow");
+                showCreateDialog(Debt.Type.BORROWED);
                 break;
 
             case R.id.action_lend:
-                DebtCreationDialog.newInstance(userLocalStore.getLoggedInUser().getId(), Debt.Type.LOANED).show(getSupportFragmentManager(), "lend");
+                showCreateDialog(Debt.Type.LOANED);
                 break;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
         return false;
+    }
+
+    private void showCreateDialog(Debt.Type debtType) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        DebtCreationDialog frag = DebtCreationDialog.newInstance(userLocalStore.getLoggedInUser().getId(), debtType);
+        frag.show(ft, "createDebt");
     }
 
     @Override
