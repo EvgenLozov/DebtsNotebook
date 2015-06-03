@@ -2,6 +2,7 @@ package com.example.lozov.debtsnotebook.network.request;
 
 import android.app.ProgressDialog;
 
+import com.android.volley.Request;
 import com.example.lozov.debtsnotebook.User;
 import com.example.lozov.debtsnotebook.network.AppController;
 import com.example.lozov.debtsnotebook.network.callback.ResourceCallback;
@@ -28,7 +29,7 @@ public class RegisterUserRequest extends ResourceRequest<User> {
 
     @Override
     protected int method() {
-        return super.method();
+        return Request.Method.POST;
     }
 
     @Override

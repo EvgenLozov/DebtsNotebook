@@ -33,7 +33,8 @@ public class Debt implements Serializable{
             this.status = Status.valueOf(jsonObject.getString("status"));
             this.amountOfMoney = jsonObject.getInt("amountOfMoney");
             this.desc = jsonObject.getString("desc");
-//            this.date = jsonObject.get("date");
+            long timestamp = jsonObject.getLong("date");
+            this.date = new Date(timestamp);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -119,6 +120,13 @@ public class Debt implements Serializable{
         @Override
         public int compare(Debt lhs, Debt rhs) {
             return rhs.getStatus().compareTo(lhs.getStatus());
+        }
+    }
+
+    public static class ByDateComparator implements Comparator<Debt>{
+        @Override
+        public int compare(Debt debt, Debt debt2) {
+            return debt2.getDate().compareTo(debt.getDate());
         }
     }
 }

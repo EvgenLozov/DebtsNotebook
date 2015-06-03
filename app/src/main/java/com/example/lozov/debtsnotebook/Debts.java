@@ -20,6 +20,7 @@ import com.example.lozov.debtsnotebook.network.request.GetDebtsRequest;
 import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
         userLocalStore = new UserLocalStore(this);
 
         debtsList = new ArrayList<>();
-        debtsAdapter = new DebtsAdapter(this, debtsList);
+        debtsAdapter = new DebtsAdapter(this, new ArrayList<Debt>());
 
         lvDebts = (ListView) findViewById(R.id.lvDebts);
         lvDebts.setAdapter(debtsAdapter);
@@ -71,9 +72,13 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
                 new ResourcesCallback<Debt>() {
                     @Override
                     public void done(List<Debt> debts) {
-                        debtsList.clear();
+                        Collections.sort(debts, new Debt.ByDateComparator());
 
+                        debtsList.clear();
+                        debtsAdapter.clear();
                         debtsList.addAll(debts);
+                        debtsAdapter.addAll(debts);
+
                         debtsAdapter.notifyDataSetChanged();
                     }
                 }, debtorId, lenderId, Debt.Status.OPEN).execute();
