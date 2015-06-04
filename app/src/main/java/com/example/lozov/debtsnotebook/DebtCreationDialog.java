@@ -56,8 +56,10 @@ public class DebtCreationDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userId = getArguments().getString(USER_ID_ARG);
-        debtType = Debt.Type.valueOf(getArguments().getString(DEBT_TYPE_ARG));
+        if (getArguments() != null){
+            userId = getArguments().getString(USER_ID_ARG);
+            debtType = Debt.Type.valueOf(getArguments().getString(DEBT_TYPE_ARG));
+        }
         setStyle(android.app.DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
     }
 

@@ -1,11 +1,13 @@
 package com.example.lozov.debtsnotebook;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -38,12 +40,19 @@ public class EditDebtDialog extends DialogFragment {
         if (getArguments() != null) {
             debt = (Debt) getArguments().getSerializable(ARG_DEBT_OBJECT);
         }
+        setStyle(android.app.DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_debt_dialog, container);
 
         etDebtDesc = (EditText) view.findViewById(R.id.etDebtDesc);

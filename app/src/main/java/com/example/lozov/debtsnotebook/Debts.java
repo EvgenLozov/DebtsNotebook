@@ -3,6 +3,7 @@ package com.example.lozov.debtsnotebook;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.lozov.debtsnotebook.network.callback.ResourceCallback;
 import com.example.lozov.debtsnotebook.network.request.EditDebtRequest;
@@ -131,7 +131,7 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
         Debt debt = (Debt) lvDebts.getItemAtPosition(info.position);
         switch (item.getItemId()) {
             case R.id.editDebt:
-                EditDebtDialog.newInstance(debt).show(getSupportFragmentManager(), "borrow");
+                showEditDialog(debt);
                 return true;
             case R.id.paidUp:
                 debt.setStatus(Debt.Status.CLOSED);
@@ -140,6 +140,13 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+
+    private void showEditDialog(Debt debt) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        EditDebtDialog frag = EditDebtDialog.newInstance(debt);
+        frag.show(ft, "editDebt");
     }
 
     @Override

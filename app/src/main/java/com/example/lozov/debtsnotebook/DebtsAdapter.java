@@ -41,7 +41,10 @@ public class DebtsAdapter extends ArrayAdapter<Debt> {
         tvAmountOfMoney.setText(String.valueOf(debt.getAmountOfMoney()));
 
         TextView tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-        tvDate.setText(DATE_FORMAT.format(debt.getDate()));
+        if (debt.getDate() != null)
+            tvDate.setText(DATE_FORMAT.format(debt.getDate()));
+        else
+            tvDate.setText("N/A");
 
         return convertView;
     }

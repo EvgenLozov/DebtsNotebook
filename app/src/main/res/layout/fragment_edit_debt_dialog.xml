@@ -3,6 +3,40 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:id="@+id/linlayTitle"
+        android:background="@color/dialogTitleColor">
+
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit debt"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/bSaveDebt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SAVE"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,9 +71,4 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/bSaveDebt"
-        android:text="Save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>
