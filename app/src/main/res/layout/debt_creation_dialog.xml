@@ -49,31 +49,16 @@
             android:text="To:"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"
-            android:id="@+id/textView" />
+            android:layout_centerVertical="true"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/myborder"
-            android:orientation="horizontal" >
 
             <Spinner
                 android:id="@+id/sUser"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/myborder"
-                android:spinnerMode="dropdown"
-                android:textColor="#FFFFFF" />
-
-            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="2dp"
-                android:layout_gravity="center_vertical|right"
-                android:background="@drawable/dropdown_icon" />
-        </FrameLayout>
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                style="@style/SpinnerAppTheme"
+            />
 
     </LinearLayout>
 

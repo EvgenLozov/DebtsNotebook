@@ -151,7 +151,6 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
     @Override
     public void onDebtEdited(Debt debt) {
-
         ProgressDialog progressDialog = Util.getProgressDialog(Debts.this);
         new EditDebtRequest(progressDialog,
                 new ResourceCallback<Debt>() {
@@ -166,8 +165,13 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
                             }
                         }
 
-                        debtsAdapter.notifyDataSetChanged();
-
+                        if (debtsList.isEmpty())
+                            startActivity(new Intent(Debts.this, MainActivity.class));
+                        else {
+                            debtsAdapter.clear();
+                            debtsAdapter.addAll(debtsList);
+                            debtsAdapter.notifyDataSetChanged();
+                        }
                     }
                 }, debt).execute();
     }

@@ -42,7 +42,7 @@ public class EditDebtRequest extends ResourceRequest<Debt> {
             dataToSend.put("amountOfMoney", debt.getAmountOfMoney());
             dataToSend.put("desc", debt.getDesc());
             dataToSend.put("status", debt.getStatus());
-//                dataToSend.put("date", debt.getDate());
+            dataToSend.put("date", debt.getDate().getTime());
         } catch (JSONException e) {
             e.printStackTrace();
         }
