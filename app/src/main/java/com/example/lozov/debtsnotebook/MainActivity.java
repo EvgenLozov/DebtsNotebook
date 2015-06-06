@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements DebtCreationDialo
 
     @Override
     public void onDebtCreated(Debt debt) {
-        ProgressDialog progressDialog = Util.getProgressDialog(this);
+        ProgressDialog progressDialog = Util.getProgressDialog(MainActivity.this);
         new CreateDebtRequest(progressDialog, new ResourceCallback<Debt>() {
             @Override
             public void done(Debt resource) {

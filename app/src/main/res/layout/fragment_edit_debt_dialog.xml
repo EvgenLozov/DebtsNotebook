@@ -40,6 +40,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
         android:text="Description:"/>
@@ -49,14 +50,14 @@
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginRight="4dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
         android:text="Amount of money:"/>
@@ -66,9 +67,8 @@
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginRight="4dp"/>
 
 </LinearLayout>

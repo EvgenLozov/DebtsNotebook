@@ -27,7 +27,7 @@ public abstract class ResourceRequest<T> {
     }
 
     public void execute(){
-        progressDialog.show();
+//        progressDialog.show();
         JsonObjectRequest request = new JsonObjectRequest(
                 method(),
                 url(),
@@ -38,17 +38,18 @@ public abstract class ResourceRequest<T> {
 
                         callback.done(parseResponse(response));
 
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(getTag(), "Error: " + error.getMessage());
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
         });
 
+        request.setRetryPolicy(AppController.DEFAULT_POLICY);
         AppController.getInstance().addToRequestQueue(request, getTag());
     }
 

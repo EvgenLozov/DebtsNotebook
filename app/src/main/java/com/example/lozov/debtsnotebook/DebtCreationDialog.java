@@ -19,7 +19,6 @@ import com.example.lozov.debtsnotebook.network.callback.ResourcesCallback;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class DebtCreationDialog extends DialogFragment {
         void onDebtCreated(Debt debt);
     }
 
-    UsersAdapter adapter;
+    SpinnerUserAdapter adapter;
 
     String userId;
     Debt.Type debtType;
@@ -79,7 +78,7 @@ public class DebtCreationDialog extends DialogFragment {
         tvDialogTitle.setText(getDialogTitle());
 
         Spinner spinner = (Spinner) view.findViewById(R.id.sUser);
-        adapter = new UsersAdapter(getActivity(), new ArrayList<User>());
+        adapter = new SpinnerUserAdapter(getActivity(), new ArrayList<User>());
 
         spinner.setAdapter(adapter);
 
@@ -114,8 +113,11 @@ public class DebtCreationDialog extends DialogFragment {
                 Debt debt = new Debt();
                 debt.setAmountOfMoney(amountOfMoney);
                 debt.setDesc(desc);
-                debt.setDate(new Date());
                 debt.setStatus(Debt.Status.OPEN);
+
+                Date date = new Date();
+                debt.setCreatedAt(date);
+                debt.setLastModified(date);
 
                 switch (debtType){
                     case BORROWED:

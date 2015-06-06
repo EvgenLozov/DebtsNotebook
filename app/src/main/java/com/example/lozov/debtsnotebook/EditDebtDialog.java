@@ -11,6 +11,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.Date;
+
 
 public class EditDebtDialog extends DialogFragment {
     public static final String ARG_DEBT_OBJECT = "debtObject";
@@ -96,6 +98,7 @@ public class EditDebtDialog extends DialogFragment {
 
             debt.setDesc(newDesc);
             debt.setAmountOfMoney(Integer.valueOf(newAmountOfMoney));
+            debt.setLastModified(new Date());
 
             mListener.onDebtEdited(debt);
             getDialog().dismiss();

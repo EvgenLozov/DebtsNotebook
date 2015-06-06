@@ -1,8 +1,6 @@
 package com.example.lozov.debtsnotebook;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +38,9 @@ public class DebtsAdapter extends ArrayAdapter<Debt> {
         TextView tvAmountOfMoney = (TextView) convertView.findViewById(R.id.tvAmountOfMoney);
         tvAmountOfMoney.setText(String.valueOf(debt.getAmountOfMoney()));
 
-        TextView tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-        if (debt.getDate() != null)
-            tvDate.setText(DATE_FORMAT.format(debt.getDate()));
+        TextView tvDate = (TextView) convertView.findViewById(R.id.tvCreatedAt);
+        if (debt.getCreatedAt() != null)
+            tvDate.setText(DATE_FORMAT.format(debt.getCreatedAt()));
         else
             tvDate.setText("N/A");
 

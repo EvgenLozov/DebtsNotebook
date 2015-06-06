@@ -56,6 +56,7 @@ public abstract class ResourcesRequest<T> {
             }
         });
 
+        request.setRetryPolicy(AppController.DEFAULT_POLICY);
         AppController.getInstance().addToRequestQueue(request, getTag());
     }
 

@@ -20,7 +20,8 @@ public class Debt implements Serializable{
     private Status status;
     private Integer amountOfMoney;
     private String desc;
-    private Date date;
+    private Date createdAt;
+    private Date lastModified;
 
     public Debt() {
     }
@@ -33,8 +34,10 @@ public class Debt implements Serializable{
             this.status = Status.valueOf(jsonObject.getString("status"));
             this.amountOfMoney = jsonObject.getInt("amountOfMoney");
             this.desc = jsonObject.getString("desc");
-            long timestamp = jsonObject.getLong("date");
-            this.date = new Date(timestamp);
+            long createdAt = jsonObject.getLong("createdAt");
+            this.createdAt = new Date(createdAt);
+            long lastModified = jsonObject.getLong("lastModified");
+            this.lastModified = new Date(lastModified);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -88,12 +91,20 @@ public class Debt implements Serializable{
         this.desc = desc;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 
     public static List<Debt> fromJson(JSONArray jsonArray) {
@@ -126,7 +137,7 @@ public class Debt implements Serializable{
     public static class ByDateComparator implements Comparator<Debt>{
         @Override
         public int compare(Debt debt, Debt debt2) {
-            return debt2.getDate().compareTo(debt.getDate());
+            return debt2.getCreatedAt().compareTo(debt.getCreatedAt());
         }
     }
 }
