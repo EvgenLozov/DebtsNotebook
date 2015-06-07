@@ -19,9 +19,9 @@ public class GetDebtsRequest extends ResourcesRequest<Debt> {
     private String debtorId;
     private Debt.Status status;
 
-    public GetDebtsRequest(ProgressDialog progressDialog, ResourcesCallback<Debt> callback,
+    public GetDebtsRequest(ResourcesCallback<Debt> callback,
                            String debtorId, String lenderId, Debt.Status status) {
-        super(progressDialog, callback);
+        super(callback);
         this.debtorId = debtorId;
         this.lenderId = lenderId;
         this.status = status;

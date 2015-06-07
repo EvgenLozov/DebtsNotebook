@@ -25,10 +25,13 @@ public class LendersTab extends Fragment {
 
     ListView lvMyLenders;
     UserLocalStore userLocalStore;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         userLocalStore = new UserLocalStore(getActivity());
+        progressDialog = DialogUtil.getProgressDialog(getActivity());
+
         super.onCreate(savedInstanceState);
     }
 
@@ -41,14 +44,20 @@ public class LendersTab extends Fragment {
         adapter = new UsersAdapter(getActivity(), new ArrayList<User>());
         lvMyLenders.setAdapter(adapter);
 
-        ProgressDialog progressDialog = Util.getProgressDialog(getActivity());
-
-        new GetLendersRequest(progressDialog, new ResourcesCallback<User>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new GetLendersRequest(new ResourcesCallback<User>() {
             @Override
-            public void done(List<User> lenders) {
+            public void onSuccess(List<User> lenders) {
+                DialogUtil.dismissProgressDialog(progressDialog);
+
                 adapter.clear();
                 adapter.addAll(lenders);
                 adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError() {
+                DialogUtil.dismissProgressDialog(progressDialog);
             }
         }, userLocalStore.getLoggedInUser().getId()).execute();
 

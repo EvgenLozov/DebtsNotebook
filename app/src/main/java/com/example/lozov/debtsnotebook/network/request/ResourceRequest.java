@@ -1,7 +1,5 @@
 package com.example.lozov.debtsnotebook.network.request;
 
-import android.app.ProgressDialog;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,16 +16,13 @@ import org.json.JSONObject;
 public abstract class ResourceRequest<T> {
     protected static final String DEFAULT_TAG = "getResourceRequest";
 
-    protected ProgressDialog progressDialog;
     protected ResourceCallback<T> callback;
 
-    public ResourceRequest(ProgressDialog progressDialog, ResourceCallback<T> callback) {
-        this.progressDialog = progressDialog;
+    public ResourceRequest(ResourceCallback<T> callback) {
         this.callback = callback;
     }
 
     public void execute(){
-//        progressDialog.show();
         JsonObjectRequest request = new JsonObjectRequest(
                 method(),
                 url(),
@@ -35,21 +30,17 @@ public abstract class ResourceRequest<T> {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
-                        callback.done(parseResponse(response));
-
-//                        progressDialog.dismiss();
+                        callback.onSuccess(parseResponse(response));
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(getTag(), "Error: " + error.getMessage());
-//                progressDialog.dismiss();
+                callback.onError();
             }
         });
 
-        request.setRetryPolicy(AppController.DEFAULT_POLICY);
         AppController.getInstance().addToRequestQueue(request, getTag());
     }
 

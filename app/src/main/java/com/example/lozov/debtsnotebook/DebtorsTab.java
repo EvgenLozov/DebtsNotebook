@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -29,11 +26,13 @@ public class DebtorsTab extends Fragment {
     ListView lvMyDebtors;
     UserLocalStore userLocalStore;
 
+    ProgressDialog progressDialog;
     UsersAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         userLocalStore = new UserLocalStore(getActivity());
+        progressDialog = DialogUtil.getProgressDialog(getActivity());
         super.onCreate(savedInstanceState);
     }
 
@@ -45,15 +44,22 @@ public class DebtorsTab extends Fragment {
         adapter = new UsersAdapter(getActivity(), new ArrayList<User>());
         lvMyDebtors.setAdapter(adapter);
 
-        ProgressDialog progressDialog = Util.getProgressDialog(getActivity());
         String userId = userLocalStore.getLoggedInUser().getId();
 
-        new GetDebtorsRequest(progressDialog, new ResourcesCallback<User>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new GetDebtorsRequest(new ResourcesCallback<User>() {
             @Override
-            public void done(List<User> debtors) {
+            public void onSuccess(List<User> debtors) {
+                DialogUtil.dismissProgressDialog(progressDialog);
+
                 adapter.clear();
                 adapter.addAll(debtors);
                 adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError() {
+                DialogUtil.dismissProgressDialog(progressDialog);
             }
         }, userId).execute();
 

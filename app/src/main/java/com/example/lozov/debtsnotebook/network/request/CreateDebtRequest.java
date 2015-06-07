@@ -17,8 +17,8 @@ public class CreateDebtRequest extends ResourceRequest<Debt> {
 
     private Debt debt;
 
-    public CreateDebtRequest(ProgressDialog progressDialog, ResourceCallback<Debt> callback, Debt debt) {
-        super(progressDialog, callback);
+    public CreateDebtRequest(ResourceCallback<Debt> callback, Debt debt) {
+        super(callback);
         this.debt = debt;
     }
 

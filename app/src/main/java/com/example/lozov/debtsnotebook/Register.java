@@ -17,11 +17,13 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     Button bRegister;
     EditText etEmail, etUsername, etPassword;
     UserLocalStore userLocalStore;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        progressDialog = DialogUtil.getProgressDialog(this);
 
         etEmail = (EditText) findViewById(R.id.etEmail);
         etUsername = (EditText) findViewById(R.id.etUsername);
@@ -51,12 +53,17 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     }
 
     private void register(User newUser) {
-        ProgressDialog progressDialog = Util.getProgressDialog(this);
-        new RegisterUserRequest(progressDialog,
-                new ResourceCallback<User>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new RegisterUserRequest(new ResourceCallback<User>() {
             @Override
-            public void done(User user) {
+            public void onSuccess(User user) {
+                DialogUtil.dismissProgressDialog(progressDialog);
                 startActivity(new Intent(Register.this, Login.class));
+            }
+
+            @Override
+            public void onError() {
+                DialogUtil.dismissProgressDialog(progressDialog);
             }
         }, newUser).execute();
     }

@@ -17,8 +17,8 @@ public class EditDebtRequest extends ResourceRequest<Debt> {
 
     private Debt debt;
 
-    public EditDebtRequest(ProgressDialog progressDialog, ResourceCallback<Debt> callback, Debt debt) {
-        super(progressDialog, callback);
+    public EditDebtRequest(ResourceCallback<Debt> callback, Debt debt) {
+        super(callback);
         this.debt = debt;
     }
 

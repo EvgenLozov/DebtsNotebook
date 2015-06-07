@@ -22,9 +22,9 @@ public class LoginRequest extends ResourceRequest<User> {
     private String username;
     private String password;
 
-    public LoginRequest(ProgressDialog progressDialog, ResourceCallback<User> callback,
+    public LoginRequest(ResourceCallback<User> callback,
                         String username, String password) {
-        super(progressDialog, callback);
+        super(callback);
         this.username = username;
         this.password = password;
     }

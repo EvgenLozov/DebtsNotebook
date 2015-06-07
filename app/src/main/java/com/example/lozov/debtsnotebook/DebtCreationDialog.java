@@ -33,6 +33,8 @@ public class DebtCreationDialog extends DialogFragment {
         void onDebtCreated(Debt debt);
     }
 
+    ProgressDialog progressDialog;
+
     SpinnerUserAdapter adapter;
 
     String userId;
@@ -60,6 +62,8 @@ public class DebtCreationDialog extends DialogFragment {
             debtType = Debt.Type.valueOf(getArguments().getString(DEBT_TYPE_ARG));
         }
         setStyle(android.app.DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
+
+        progressDialog = DialogUtil.getProgressDialog(getActivity());
     }
 
     @Override
@@ -82,19 +86,23 @@ public class DebtCreationDialog extends DialogFragment {
 
         spinner.setAdapter(adapter);
 
-        ProgressDialog progressDialog = Util.getProgressDialog(getActivity());
-
-        new GetUsersRequest(progressDialog,
-                            new ResourcesCallback<User>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new GetUsersRequest(new ResourcesCallback<User>() {
                                 @Override
-                                public void done(List<User> users) {
-                                    Util.removeUserFromList(userId, users);
+                                public void onSuccess(List<User> users) {
+                                    DialogUtil.dismissProgressDialog(progressDialog);
 
+                                    DialogUtil.removeUserFromList(userId, users);
                                     adapter.clear();
                                     adapter.addAll(users);
                                     adapter.notifyDataSetChanged();
                                 }
-                          }).execute();
+
+                                @Override
+                                public void onError() {
+                                    DialogUtil.dismissProgressDialog(progressDialog);
+                                }
+        }).execute();
 
         debtCreationListener = (DebtCreationListener) getActivity();
 

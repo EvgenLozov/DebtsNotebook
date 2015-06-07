@@ -17,11 +17,8 @@ import java.util.List;
 public class DebtsAdapter extends ArrayAdapter<Debt> {
     public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-    private List<Debt> debts;
-
     public DebtsAdapter(Context context, List<Debt> objects) {
         super(context, 0, objects);
-        this.debts = objects;
     }
 
     @Override
@@ -45,10 +42,5 @@ public class DebtsAdapter extends ArrayAdapter<Debt> {
             tvDate.setText("N/A");
 
         return convertView;
-    }
-
-    private static class DebtViewHolder{
-        TextView tvDesc;
-        TextView tvAmountOfMoney;
     }
 }

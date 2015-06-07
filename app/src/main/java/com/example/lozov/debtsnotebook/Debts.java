@@ -35,8 +35,9 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
     DebtsAdapter debtsAdapter;
     List<Debt> debtsList;
 
-    UserLocalStore userLocalStore;
+    private ProgressDialog progressDialog;
 
+    UserLocalStore userLocalStore;
     private String debtorId;
     private String lenderId;
     private String title;
@@ -48,6 +49,8 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
         Intent intent = getIntent();
         debtorId = intent.getStringExtra(DEBTOR_ID);
         lenderId = intent.getStringExtra(LENDER_ID);
+
+        progressDialog = DialogUtil.getProgressDialog(Debts.this);
 
         title = intent.getStringExtra(TITLE);
         setTitle(title);
@@ -66,12 +69,12 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
     }
 
     private void populateAdapter() {
-        ProgressDialog progressDialog = Util.getProgressDialog(Debts.this);
-
-        new GetDebtsRequest(progressDialog,
-                new ResourcesCallback<Debt>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new GetDebtsRequest(new ResourcesCallback<Debt>() {
                     @Override
-                    public void done(List<Debt> debts) {
+                    public void onSuccess(List<Debt> debts) {
+                        DialogUtil.dismissProgressDialog(progressDialog);
+
                         Collections.sort(debts, new Debt.ByDateComparator());
 
                         debtsList.clear();
@@ -81,17 +84,13 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
                         debtsAdapter.notifyDataSetChanged();
                     }
+
+                    @Override
+                    public void onError() {
+                        DialogUtil.dismissProgressDialog(progressDialog);
+                    }
                 }, debtorId, lenderId, Debt.Status.OPEN).execute();
     }
-
-    private int getTotalDebt(List<Debt> debts) {
-        Integer result = 0;
-        for (Debt debt : debts) {
-            result += debt.getAmountOfMoney();
-        }
-        return result;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,14 +107,6 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private View getHeaderView(int totalAmount){
-        View headerView = getLayoutInflater().inflate(R.layout.debts_header, null);
-        TextView tvTotalAmountOfMoney = (TextView) headerView.findViewById(R.id.tvTotalAmountOfMoney);
-        tvTotalAmountOfMoney.setText(String.valueOf(totalAmount));
-
-        return headerView;
     }
 
     @Override
@@ -151,11 +142,12 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
 
     @Override
     public void onDebtEdited(Debt debt) {
-        ProgressDialog progressDialog = Util.getProgressDialog(Debts.this);
-        new EditDebtRequest(progressDialog,
-                new ResourceCallback<Debt>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new EditDebtRequest(new ResourceCallback<Debt>() {
                     @Override
-                    public void done(Debt debt) {
+                    public void onSuccess(Debt debt) {
+                        DialogUtil.dismissProgressDialog(progressDialog);
+
                         Iterator<Debt> iterator = debtsList.iterator();
                         while (iterator.hasNext()){
                             Debt next = iterator.next();
@@ -173,6 +165,11 @@ public class Debts extends AppCompatActivity implements EditDebtDialog.OnDebtEdi
                             debtsAdapter.notifyDataSetChanged();
                         }
                     }
-                }, debt).execute();
+
+                    @Override
+                    public void onError() {
+                        DialogUtil.dismissProgressDialog(progressDialog);
+                    }
+        }, debt).execute();
     }
 }

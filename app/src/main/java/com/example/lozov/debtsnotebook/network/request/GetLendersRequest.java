@@ -17,8 +17,8 @@ public class GetLendersRequest extends ResourcesRequest<User> {
 
     private String userId;
 
-    public GetLendersRequest(ProgressDialog progressDialog, ResourcesCallback<User> callback, String userId) {
-        super(progressDialog, callback);
+    public GetLendersRequest(ResourcesCallback<User> callback, String userId) {
+        super(callback);
         this.userId = userId;
     }
 

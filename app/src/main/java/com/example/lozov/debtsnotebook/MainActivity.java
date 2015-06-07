@@ -19,12 +19,14 @@ public class MainActivity extends AppCompatActivity implements DebtCreationDialo
 
     ViewPager viewPager;
     MainPagerAdapter pagerAdapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userLocalStore = new UserLocalStore(this);
+        progressDialog = DialogUtil.getProgressDialog(MainActivity.this);
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -104,11 +106,17 @@ public class MainActivity extends AppCompatActivity implements DebtCreationDialo
 
     @Override
     public void onDebtCreated(Debt debt) {
-        ProgressDialog progressDialog = Util.getProgressDialog(MainActivity.this);
-        new CreateDebtRequest(progressDialog, new ResourceCallback<Debt>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new CreateDebtRequest(new ResourceCallback<Debt>() {
             @Override
-            public void done(Debt resource) {
+            public void onSuccess(Debt resource) {
                 //todo validate response
+                DialogUtil.dismissProgressDialog(progressDialog);
+            }
+
+            @Override
+            public void onError() {
+                DialogUtil.dismissProgressDialog(progressDialog);
             }
         }, debt).execute();
         finish();

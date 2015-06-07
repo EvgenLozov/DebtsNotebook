@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by lozov on 22.05.15.
  */
-public class Util {
+public class DialogUtil {
     public static ProgressDialog getProgressDialog(Context context){
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(false);
@@ -27,6 +27,20 @@ public class Util {
                 iterator.remove();
                 return;
             }
+        }
+    }
+
+    public static void dismissProgressDialog(ProgressDialog progressDialog) {
+        if(progressDialog != null && progressDialog.isShowing())
+        {
+            progressDialog.dismiss();
+        }
+    }
+
+    public static void showProgressDialog(ProgressDialog progressDialog) {
+        if(progressDialog != null && !progressDialog.isShowing())
+        {
+            progressDialog.show();
         }
     }
 }

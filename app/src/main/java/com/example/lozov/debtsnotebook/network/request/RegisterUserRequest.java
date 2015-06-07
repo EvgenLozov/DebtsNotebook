@@ -17,8 +17,8 @@ public class RegisterUserRequest extends ResourceRequest<User> {
 
     private User user;
 
-    public RegisterUserRequest(ProgressDialog progressDialog, ResourceCallback<User> callback, User user) {
-        super(progressDialog, callback);
+    public RegisterUserRequest(ResourceCallback<User> callback, User user) {
+        super(callback);
         this.user = user;
     }
 

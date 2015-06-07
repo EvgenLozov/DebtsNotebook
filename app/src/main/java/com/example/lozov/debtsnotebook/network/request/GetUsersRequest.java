@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class GetUsersRequest extends ResourcesRequest<User> {
 
-    public GetUsersRequest(ProgressDialog progressDialog, ResourcesCallback<User> callback) {
-        super(progressDialog, callback);
+    public GetUsersRequest(ResourcesCallback<User> callback) {
+        super(callback);
     }
 
     @Override

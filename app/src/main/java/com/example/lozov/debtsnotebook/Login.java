@@ -20,11 +20,13 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
     EditText etUsername, etPassword;
     TextView tvRegisterLink;
     UserLocalStore userLocalStore;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        progressDialog = DialogUtil.getProgressDialog(this);
 
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -58,22 +60,23 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
     }
 
     private void authenticate(String username, String password) {
-        ProgressDialog progressDialog = Util.getProgressDialog(this);
-
-        new LoginRequest(
-                progressDialog,
-                new ResourceCallback<User>() {
+        DialogUtil.showProgressDialog(progressDialog);
+        new LoginRequest(new ResourceCallback<User>() {
                     @Override
-                    public void done(User returnedUser) {
+                    public void onSuccess(User returnedUser) {
+                        DialogUtil.dismissProgressDialog(progressDialog);
                         if (returnedUser == null){
                             showErrorMessage();
                         } else {
                             logUserIn(returnedUser);
                         }
                     }
-                },
-                username,
-                password).execute();
+
+                    @Override
+                    public void onError() {
+                        DialogUtil.dismissProgressDialog(progressDialog);
+                    }
+            },username, password).execute();
     }
 
     private void logUserIn(User user) {
