@@ -1,5 +1,7 @@
 package com.example.lozov.debtsnotebook;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,11 +122,22 @@ public class Debt implements Serializable{
     }
 
     public static enum Status{
-        CLOSED, OPEN
+        CLOSED, OPEN;
     }
 
+
     public static enum Type{
-        BORROWED, LOANED
+        BORROWED, LOANED;
+    }
+
+    public static boolean isAmountOfMoneyValid(String newAmountOfMoney) {
+        Integer amountOfMoney;
+        try {
+            amountOfMoney = Integer.valueOf(newAmountOfMoney);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return amountOfMoney > 0;
     }
 
     public static class ByStatusCompataror implements Comparator<Debt>{

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,17 @@ public class EditDebtDialog extends DialogFragment {
         @Override
         public void onClick(View v) {
             String newDesc = etDebtDesc.getText().toString();
+            if (TextUtils.isEmpty(newDesc)){
+                etDebtDesc.setError("Invalid value");
+                etDebtDesc.requestFocus();
+                return;
+            }
             String newAmountOfMoney = etAmountOfMoney.getText().toString();
+            if (!Debt.isAmountOfMoneyValid(newAmountOfMoney)){
+                etAmountOfMoney.setError("Invalid value");
+                etAmountOfMoney.requestFocus();
+                return;
+            }
 
             debt.setDesc(newDesc);
             debt.setAmountOfMoney(Integer.valueOf(newAmountOfMoney));

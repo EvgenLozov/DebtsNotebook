@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,15 +112,25 @@ public class DebtCreationDialog extends DialogFragment {
             public void onClick(View v) {
                 EditText etDesc = (EditText) view.findViewById(R.id.etDebtDesc);
                 String desc = etDesc.getText().toString();
+                if (TextUtils.isEmpty(desc)){
+                    etDesc.setError("Invalid value");
+                    etDesc.requestFocus();
+                    return;
+                }
 
                 EditText etAmountOfMoney = (EditText) view.findViewById(R.id.etAmountOfMoney);
-                Integer amountOfMoney = Integer.valueOf(etAmountOfMoney.getText().toString());
+                String amountOfMoney = etAmountOfMoney.getText().toString();
+                if (!Debt.isAmountOfMoneyValid(amountOfMoney)){
+                    etAmountOfMoney.setError("Invalid value");
+                    etAmountOfMoney.requestFocus();
+                    return;
+                }
 
                 Spinner sUser = (Spinner) view.findViewById(R.id.sUser);
                 String lender = ((User) sUser.getSelectedItem()).getId();
 
                 Debt debt = new Debt();
-                debt.setAmountOfMoney(amountOfMoney);
+                debt.setAmountOfMoney(Integer.valueOf(amountOfMoney));
                 debt.setDesc(desc);
                 debt.setStatus(Debt.Status.OPEN);
 

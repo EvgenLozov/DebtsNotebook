@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +44,23 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
                 String email = etEmail.getText().toString();
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
+
+                if (TextUtils.isEmpty(email) ||
+                    !email.contains("@")){
+                    etEmail.setError("Invalid value");
+                    etEmail.requestFocus();
+                    return;
+                }
+                if (TextUtils.isEmpty(username)){
+                    etUsername.setError("Invalid value");
+                    etUsername.requestFocus();
+                    return;
+                }
+                if (TextUtils.isEmpty(password)) {
+                    etPassword.setError("Invalid value");
+                    etPassword.requestFocus();
+                    return;
+                }
 
                 User newUser = new User(email, username, password);
 
